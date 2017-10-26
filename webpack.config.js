@@ -56,4 +56,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin()
   ],
+  resolve: {
+    extensions: ['.js', '.jsx']
+  }
 };
