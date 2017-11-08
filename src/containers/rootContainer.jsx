@@ -1,3 +1,6 @@
+import React from 'react';
+import Root from '../components/root';
+
 const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/12.20.0.json');
 const SenseUtilities = require('enigma.js/sense-utilities');
@@ -8,7 +11,7 @@ const url = SenseUtilities.buildUrl({
 });
 const session = enigma.create({ schema, url });
 
-export default class App extends React.Component {
+export default class RootContainer extends React.Component {
   constructor(props) {
     super(props);
 

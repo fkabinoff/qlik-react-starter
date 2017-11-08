@@ -14,7 +14,7 @@ module.exports = {
   module: {
     loaders: [
       {
-        include: /\.js$/,
+        include: /\.(js|jsx)$/,
         exclude: /(node_modules)/,
         loader: 'babel-loader',
         query: {
@@ -22,11 +22,11 @@ module.exports = {
           plugins: ['react-hot-loader/babel'],
         },
       },
-      {
-        test: /\.js$/,
-        exclude: /(node_modules)/,
-        loader: 'eslint-loader',
-      },
+      // {
+      //   test: /\.(js|jsx)$/,
+      //   exclude: /(node_modules)/,
+      //   loader: 'eslint-loader',
+      // },
       {
         test: /\.(scss)$/,
         use: [{
@@ -54,7 +54,10 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: path.resolve(__dirname, 'src/index.html')
+    })
   ],
   resolve: {
     extensions: ['.js', '.jsx']
