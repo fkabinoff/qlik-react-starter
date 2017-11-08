@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-
 module.exports = {
   entry: ['babel-polyfill', 'react-hot-loader/patch', './src/index'],
   output: {
@@ -18,15 +17,18 @@ module.exports = {
         exclude: /(node_modules)/,
         loader: 'babel-loader',
         query: {
-          presets: ['latest', 'react'],
+          presets: [['latest', {es2015: {modules: process.env.ENV === 'production' ? 'commonjs' : false}}], 'react'],
           plugins: ['react-hot-loader/babel'],
         },
       },
-      // {
-      //   test: /\.(js|jsx)$/,
-      //   exclude: /(node_modules)/,
-      //   loader: 'eslint-loader',
-      // },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules)/,
+        loader: 'eslint-loader',
+        options: {
+          fix: true
+        },
+      },
       {
         test: /\.(scss)$/,
         use: [{

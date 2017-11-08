@@ -16,13 +16,13 @@ export default class RootContainer extends React.Component {
     super(props);
 
     this.state = {
-      qDoc: null
+      qDoc: null,
     };
   }
 
   componentWillMount() {
     session.open().then((global) => {
-      global.openDoc('45841fc2-ae9c-490c-9bc4-55592fc62afb').then(doc => {
+      global.openDoc('45841fc2-ae9c-490c-9bc4-55592fc62afb').then((doc) => {
         this.setState({ qDoc: doc });
       });
     });

@@ -4,21 +4,18 @@ import { AppContainer } from 'react-hot-loader';
 import RootContainer from './containers/rootContainer';
 import './styles/index.scss';
 
-const render = Component => {
+const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
       <Component />
     </AppContainer>,
-    document.getElementById('root')
+    document.getElementById('root'),
   );
-}
+};
 
 render(RootContainer);
 
 // Hot Module Replacement API
 if (module.hot) {
-  module.hot.accept('./containers/rootContainer', () => {
-    const NextRootContainer = require('./containers/rootContainer').default;
-    render(RootContainer);
-  });
+  module.hot.accept('./containers/rootContainer', () => { render(RootContainer); });
 }
