@@ -1,13 +1,13 @@
 const React = require('react');
 
-const resolve = (WrappedComponent, promise) => class extends React.Component {
+const resolve = (WrappedComponent, asyncFunc) => class extends React.Component {
   constructor(props) {
     super(props);
     this.state = { loading: true, error: null, value: null };
   }
 
   componentDidMount() {
-    this.props[promise].then(
+    asyncFunc(this.props).then(
       value => this.setState({ loading: false, value }),
       error => this.setState({ loading: false, error }),
     );
@@ -19,9 +19,7 @@ const resolve = (WrappedComponent, promise) => class extends React.Component {
     } else if (this.state.error !== null) {
       return <span>Error: {this.state.error.message}</span>;
     }
-    const { ...passThroughProps } = this.props;
-    passThroughProps[promise] = this.state.value;
-    return <WrappedComponent {...passThroughProps} />;
+    return <WrappedComponent {...this.state.value} {...this.props} />;
   }
 };
 
