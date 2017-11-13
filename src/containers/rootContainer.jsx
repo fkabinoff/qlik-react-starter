@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import resolve from '../hocs/resolve';
 import Root from '../components/root';
 
@@ -20,6 +21,8 @@ async function getDoc() {
 }
 
 class RootContainer extends React.Component {
+  static propTypes = { qDoc: PropTypes.object.isRequired };
+
   constructor(props) {
     super(props);
     this.state = {};

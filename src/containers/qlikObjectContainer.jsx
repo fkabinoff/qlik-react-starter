@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import resolve from '../hocs/resolve';
 
 async function getSessionObject(qDoc, qProp) {
@@ -6,7 +7,14 @@ async function getSessionObject(qDoc, qProp) {
   return { qObject };
 }
 
-class HyperCubeContainer extends React.Component {
+class QlikObjectContainer extends React.Component {
+  static propTypes = {
+    qDoc: PropTypes.object.isRequired,
+    qProp: PropTypes.object.isRequired,
+    qObject: PropTypes.object.isRequired,
+    render: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {};
@@ -19,4 +27,4 @@ class HyperCubeContainer extends React.Component {
   }
 }
 
-export default resolve(HyperCubeContainer, props => getSessionObject(props.qDoc, props.qProp));
+export default resolve(QlikObjectContainer, props => getSessionObject(props.qDoc, props.qProp));
