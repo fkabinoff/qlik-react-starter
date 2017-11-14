@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import resolve from '../hocs/resolve';
+import qDocPromise from '../qDoc';
 
 class QlikObjectContainer extends React.Component {
   static propTypes = {
-    qDoc: PropTypes.object.isRequired,
     qProp: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
   };
@@ -17,16 +16,25 @@ class QlikObjectContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      qObject: {},
-      layout: {},
-      data: {},
       loading: false,
       error: false,
+      layout: {},
+      data: {},
     };
   }
 
-  componentDidMount() {
-    this.props.qObject.on('changed', () => { this.update(); });
+  async componentWillMount() {
+    this.setState({ loading: true, error: false });
+    try {
+      const qDoc = await qDocPromise();
+      this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
+      const qObject = await this.qObjectPromise();
+      qObject.on('changed', () => { this.update(); }); 
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   update() {
@@ -35,12 +43,14 @@ class QlikObjectContainer extends React.Component {
   }
 
   async getLayout() {
-    const layout = await this.props.qObject.getLayout();
+    const qObject = await this.qObjectPromise();
+    const layout = await qObject.getLayout();
     this.setState({ layout });
   }
 
-  async getData(qPages) {
-    const data = await this.props.qObject.getHyperCubeData('/qHyperCubeDef', qPages);
+  async getData() {
+    const qObject = await this.qObjectPromise();
+    const data = await qObject.getHyperCubeData('/qHyperCubeDef', this.state.qPages);
     this.setState({ data });
   }
 
