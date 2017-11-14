@@ -59,8 +59,11 @@ class QlikObjectContainer extends React.Component {
   }
 
   render() {
-    return (
-      this.props.render(this.state)
-    );
+    if (this.state.loading) {
+      return <div>Loading...</div>;
+    } else if (this.state.error) {
+      return <div>{this.state.error.message}</div>;
+    }
+    return this.props.render(this.state);
   }
 }
