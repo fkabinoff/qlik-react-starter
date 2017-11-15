@@ -1,14 +1,23 @@
 import React from 'react';
+import autobind from 'autobind-decorator';
 import PropTypes from 'prop-types';
 import qDocPromise from '../qDoc';
 
 export default class QlikObjectContainer extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
-    type: PropTypes.string.isRequired,
-    qPages: PropTypes.object.isRequired,
+    type: PropTypes.oneOf(['hypercube', 'list', 'expression']).isRequired,
+    qPages: PropTypes.object,
     render: PropTypes.func.isRequired,
   };
+  static defaultProps = {
+    qPages: [{
+      qTop: 0,
+      qLeft: 0,
+      qWidth: 10,
+      qHeight: 20
+    }]
+  }
 
   constructor(props) {
     super(props);
@@ -17,8 +26,21 @@ export default class QlikObjectContainer extends React.Component {
       error: false,
       layout: {},
       data: {},
+      qPages: this.props.qPages
     };
   }
+
+  path = this.props.type === 'hypercube' ?
+    '/qHyperCubeDef' :
+    this.props.type === 'list' ?
+    'qListObjectDef' :
+    null; 
+
+  dataFunc = this.props.type === 'hypercube' ?
+    'getHyperCubeData' :
+    this.props.type === 'list' ?
+    'getListObjectData' :
+    null; 
 
   async componentWillMount() {
     this.setState({ loading: true, error: false });
@@ -34,9 +56,16 @@ export default class QlikObjectContainer extends React.Component {
     }
   }
 
-  update() {
-    this.getLayout();
-    this.getData();
+  async update() {
+    this.setState({ loading: true, error: false });
+    try {
+      await this.getLayout();
+      await this.getData();
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   async getLayout() {
@@ -47,12 +76,35 @@ export default class QlikObjectContainer extends React.Component {
 
   async getData() {
     const qObject = await this.qObjectPromise();
-    const data = await qObject.getHyperCubeData('/qHyperCubeDef', this.state.qPages);
+    const data = this.props.type === 'hypercube' ? 
+      await qObject[this.dataFunc](this.path, this.state.qPages) :
+      this.props.type === 'list' ?
+      await qObject[this.dataFunc](this.path, this.state.qPages) :
+      null;
     this.setState({ data });
   }
 
-  applyPatches(patches) {
-    this.props.qObject.applyPatches(patches);
+  @autobind
+  setPages(qPages) {
+    this.setState({ qPages });
+  }
+
+  @autobind
+  async beginSelections() {
+    const qObject = await this.qObjectPromise();
+    qObject.beginSelections(this.path)
+  }
+
+  @autobind
+  async endSelections(qAccept) {
+    const qObject = await this.qObjectPromise();
+    qObject.endSelections(qAccept);
+  }
+
+  @autobind
+  async applyPatches(patches) {
+    const qObject = await this.qObjectPromise();
+    qObject.applyPatches(patches);
   }
 
   render() {
