@@ -3,6 +3,21 @@ import autobind from 'autobind-decorator';
 import PropTypes from 'prop-types';
 import qDocPromise from '../qDoc';
 
+const settings = {
+  hypercube: {
+    path: '/qHyperCubeDef',
+    dataFunc: 'getHyperCubeData',
+  },
+  list: {
+    path: '/qListObjectDef',
+    dataFunc: 'getListObjectData',
+  },
+  expression: {
+    path: null,
+    dataFunc: null,
+  },
+};
+
 export default class QlikObjectContainer extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
@@ -15,8 +30,8 @@ export default class QlikObjectContainer extends React.Component {
       qTop: 0,
       qLeft: 0,
       qWidth: 10,
-      qHeight: 20
-    }]
+      qHeight: 20,
+    }],
   }
 
   constructor(props) {
@@ -26,21 +41,9 @@ export default class QlikObjectContainer extends React.Component {
       error: false,
       layout: {},
       data: {},
-      qPages: this.props.qPages
+      qPages: this.props.qPages,
     };
   }
-
-  path = this.props.type === 'hypercube' ?
-    '/qHyperCubeDef' :
-    this.props.type === 'list' ?
-    'qListObjectDef' :
-    null; 
-
-  dataFunc = this.props.type === 'hypercube' ?
-    'getHyperCubeData' :
-    this.props.type === 'list' ?
-    'getListObjectData' :
-    null; 
 
   async componentWillMount() {
     this.setState({ loading: true, error: false });
@@ -48,12 +51,31 @@ export default class QlikObjectContainer extends React.Component {
       const qDoc = await qDocPromise();
       this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
       const qObject = await this.qObjectPromise();
-      qObject.on('changed', () => { this.update(); }); 
+      qObject.on('changed', () => { this.update(); });
     } catch (error) {
       this.setState({ error });
     } finally {
       this.setState({ loading: false });
     }
+  }
+
+  @autobind
+  setPages(qPages) {
+    this.setState({ qPages });
+  }
+
+  settings = settings[this.props.type];
+
+  async getLayout() {
+    const qObject = await this.qObjectPromise();
+    const layout = await qObject.getLayout();
+    this.setState({ layout });
+  }
+
+  async getData() {
+    const qObject = await this.qObjectPromise();
+    const data = await qObject[this.settings.dataFunc](this.settings.path, this.state.qPages);
+    this.setState({ data });
   }
 
   async update() {
@@ -68,31 +90,10 @@ export default class QlikObjectContainer extends React.Component {
     }
   }
 
-  async getLayout() {
-    const qObject = await this.qObjectPromise();
-    const layout = await qObject.getLayout();
-    this.setState({ layout });
-  }
-
-  async getData() {
-    const qObject = await this.qObjectPromise();
-    const data = this.props.type === 'hypercube' ? 
-      await qObject[this.dataFunc](this.path, this.state.qPages) :
-      this.props.type === 'list' ?
-      await qObject[this.dataFunc](this.path, this.state.qPages) :
-      null;
-    this.setState({ data });
-  }
-
-  @autobind
-  setPages(qPages) {
-    this.setState({ qPages });
-  }
-
   @autobind
   async beginSelections() {
     const qObject = await this.qObjectPromise();
-    qObject.beginSelections(this.path)
+    qObject.beginSelections(this.settings.path);
   }
 
   @autobind

@@ -1,4 +1,5 @@
 import React from 'react';
+import QlikObject from './qlikObject';
 import qDocPromise from '../qDoc';
 
 export default class Root extends React.Component {
@@ -27,6 +28,8 @@ export default class Root extends React.Component {
     } else if (this.state.error) {
       return <div>{this.state.error.message}</div>;
     }
-    return <div>Root</div>;
+    return (
+      <div>Stuff</div>
+    );
   }
 }
