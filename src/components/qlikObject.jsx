@@ -2,16 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import qDocPromise from '../qDoc';
 
-class QlikObjectContainer extends React.Component {
+export default class QlikObjectContainer extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
+    type: PropTypes.string.isRequired,
+    qPages: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
   };
-
-  static async getSessionObject(qDoc, qProp) {
-    const qObject = await qDoc.createSessionObject(qProp);
-    return { qObject };
-  }
 
   constructor(props) {
     super(props);
