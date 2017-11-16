@@ -1,14 +1,16 @@
-let qProps = {};
+const qProps = {};
 
 qProps.testList = {
   qInfo: {
-    qType: 'visualization'
+    qType: 'visualization',
   },
   qListObjectDef: {
     qDef: {
-      qFieldDefs: [this.props.field]
+      qFieldDefs: ['Product Group Desc'],
     },
     qShowAlternatives: true,
-    qAutoSortByState: { qDisplayNumberOfRows: 1}
-  }
-}
+    qAutoSortByState: { qDisplayNumberOfRows: 1 },
+  },
+};
+
+export default qProps;

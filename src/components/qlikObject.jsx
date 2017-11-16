@@ -22,8 +22,8 @@ export default class QlikObjectContainer extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
     type: PropTypes.oneOf(['hypercube', 'list', 'expression']).isRequired,
-    qPages: PropTypes.object,
-    render: PropTypes.func.isRequired,
+    qPages: PropTypes.array,
+    // render: PropTypes.func.isRequired,
   };
   static defaultProps = {
     qPages: [{
@@ -48,9 +48,10 @@ export default class QlikObjectContainer extends React.Component {
   async componentWillMount() {
     this.setState({ loading: true, error: false });
     try {
-      const qDoc = await qDocPromise();
+      const qDoc = await qDocPromise;
       this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
-      const qObject = await this.qObjectPromise();
+      const qObject = await this.qObjectPromise;
+      console.log(qObject);
       qObject.on('changed', () => { this.update(); });
     } catch (error) {
       this.setState({ error });
@@ -114,6 +115,7 @@ export default class QlikObjectContainer extends React.Component {
     } else if (this.state.error) {
       return <div>{this.state.error.message}</div>;
     }
-    return this.props.render(this.state);
+    // return this.props.render(this.state);
+    return <div>YAY</div>;
   }
 }

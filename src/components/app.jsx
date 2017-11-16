@@ -1,6 +1,7 @@
 import React from 'react';
 import QlikObject from './qlikObject';
 import qDocPromise from '../qDoc';
+import qProps from '../qProps';
 
 export default class Root extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ export default class Root extends React.Component {
   async componentWillMount() {
     this.setState({ loading: true, error: false });
     try {
-      await qDocPromise();
+      await qDocPromise;
     } catch (error) {
       this.setState({ error });
     } finally {
@@ -29,7 +30,10 @@ export default class Root extends React.Component {
       return <div>{this.state.error.message}</div>;
     }
     return (
-      <div>Stuff</div>
+      <div>
+        Stuff
+        <QlikObject qProp={qProps.testList} type="list" />
+      </div>
     );
   }
 }

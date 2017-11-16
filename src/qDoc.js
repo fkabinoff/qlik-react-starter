@@ -9,8 +9,10 @@ const url = SenseUtilities.buildUrl({
 
 const session = enigma.create({ schema, url });
 
-export default async function () {
+async function qDocAsync() {
   const global = await session.open();
   const qDoc = await global.openDoc('c7a1d0bb-f4e9-460e-9ab1-e205c18954b2');
   return qDoc;
 }
+
+export default qDocAsync();
