@@ -8,6 +8,7 @@ import qlikObject from './qlikObject';
 export default class qlikFilter extends React.Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
+    layout: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
   }
 
@@ -38,6 +39,7 @@ export default class qlikFilter extends React.Component {
               onItemClick={this.props.select}
             />))}
         </DropdownMenu>
+        <StateCountsBar layout={this.props.layout} />
       </Dropdown>
     );
   }
@@ -51,8 +53,14 @@ const FilterItem = (props) => {
     <DropdownItem onClick={handleClick}>{props.item.qText}</DropdownItem>
   );
 };
-
 FilterItem.propTypes = {
   item: PropTypes.object.isRequired,
   onItemClick: PropTypes.func.isRequired,
+};
+
+const StateCountsBar = props => (
+  <div stuff={props.layout}>StateCounts</div>
+);
+StateCountsBar.propTypes = {
+  layout: PropTypes.object.isRequired,
 };
