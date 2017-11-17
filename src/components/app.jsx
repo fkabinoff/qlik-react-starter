@@ -1,5 +1,5 @@
 import React from 'react';
-import QlikObject from './qlikObject';
+import QlikFilter from './qlikFilter';
 import qDocPromise from '../qDoc';
 import qProps from '../qProps';
 
@@ -32,7 +32,7 @@ export default class Root extends React.Component {
     return (
       <div>
         Stuff
-        <QlikObject qProp={qProps.testList} type="list" />
+        <QlikFilter qProp={qProps.testList} type="list" />
       </div>
     );
   }

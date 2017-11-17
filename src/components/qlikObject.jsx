@@ -18,12 +18,11 @@ const settings = {
   },
 };
 
-export default class QlikObjectContainer extends React.Component {
+const qlikObject = Component => class extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
     type: PropTypes.oneOf(['hypercube', 'list', 'expression']).isRequired,
     qPages: PropTypes.array,
-    // render: PropTypes.func.isRequired,
   };
   static defaultProps = {
     qPages: [{
@@ -38,7 +37,7 @@ export default class QlikObjectContainer extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      error: false,
+      error: null,
       layout: {},
       data: {},
       qPages: this.props.qPages,
@@ -46,17 +45,15 @@ export default class QlikObjectContainer extends React.Component {
   }
 
   async componentWillMount() {
-    this.setState({ loading: true, error: false });
+    this.setState({ loading: true, error: null });
     try {
       const qDoc = await qDocPromise;
       this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
       const qObject = await this.qObjectPromise;
-      console.log(qObject);
       qObject.on('changed', () => { this.update(); });
+      this.update();
     } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ loading: false });
+      this.setState({ loading: false, error });
     }
   }
 
@@ -68,19 +65,19 @@ export default class QlikObjectContainer extends React.Component {
   settings = settings[this.props.type];
 
   async getLayout() {
-    const qObject = await this.qObjectPromise();
+    const qObject = await this.qObjectPromise;
     const layout = await qObject.getLayout();
     this.setState({ layout });
   }
 
   async getData() {
-    const qObject = await this.qObjectPromise();
+    const qObject = await this.qObjectPromise;
     const data = await qObject[this.settings.dataFunc](this.settings.path, this.state.qPages);
     this.setState({ data });
   }
 
   async update() {
-    this.setState({ loading: true, error: false });
+    this.setState({ loading: true, error: null });
     try {
       await this.getLayout();
       await this.getData();
@@ -93,19 +90,19 @@ export default class QlikObjectContainer extends React.Component {
 
   @autobind
   async beginSelections() {
-    const qObject = await this.qObjectPromise();
+    const qObject = await this.qObjectPromise;
     qObject.beginSelections(this.settings.path);
   }
 
   @autobind
   async endSelections(qAccept) {
-    const qObject = await this.qObjectPromise();
+    const qObject = await this.qObjectPromise;
     qObject.endSelections(qAccept);
   }
 
   @autobind
   async applyPatches(patches) {
-    const qObject = await this.qObjectPromise();
+    const qObject = await this.qObjectPromise;
     qObject.applyPatches(patches);
   }
 
@@ -115,7 +112,8 @@ export default class QlikObjectContainer extends React.Component {
     } else if (this.state.error) {
       return <div>{this.state.error.message}</div>;
     }
-    // return this.props.render(this.state);
-    return <div>YAY</div>;
+    return <Component {...this.state} />;
   }
-}
+};
+
+export default qlikObject;
