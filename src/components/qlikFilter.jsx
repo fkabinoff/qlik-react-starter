@@ -6,10 +6,10 @@ import qlikObject from './qlikObject';
 
 const FilterItem = (props) => {
   const handleClick = () => {
-    props.onItemClick(props.item[0].qElemNumber);
+    props.onItemClick(props.item.qElemNumber);
   };
   return (
-    <DropdownItem onClick={handleClick}>{props.item[0].qText}</DropdownItem>
+    <DropdownItem onClick={handleClick}>{props.item.qText}</DropdownItem>
   );
 };
 
@@ -21,7 +21,7 @@ FilterItem.propTypes = {
 @qlikObject
 export default class qlikFilter extends React.Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     select: PropTypes.func.isRequired,
   }
 
@@ -48,7 +48,7 @@ export default class qlikFilter extends React.Component {
           {this.props.data[0].qMatrix.map(row =>
             (<FilterItem
               key={row[0].qElemNumber}
-              item={row}
+              item={row[0]}
               onItemClick={this.props.select}
             />))}
         </DropdownMenu>
