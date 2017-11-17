@@ -27,7 +27,7 @@ export default class qlikFilter extends React.Component {
 
   render() {
     return (
-      <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+      <Dropdown className="d-inline-block" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle caret>
           Dropdown
         </DropdownToggle>
@@ -62,13 +62,13 @@ const StateCountsBar = (props) => {
   const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;
   const totalStateCounts = Object.values(stateCounts).reduce((a, b) => a + b);
   const fillWidth = `${((stateCounts.qOption + stateCounts.qSelected) * 100) / totalStateCounts}%`;
-  const barStyle = { position: 'relative', backgroundColor: '#c9c9c9', height: '3px' };
+  const barStyle = { position: 'relative', height: '0.25rem' };
   const fillStyle = {
-    position: 'absolute', width: fillWidth, height: '100%', background: '#C7AC5F', transition: 'width .6s ease',
+    position: 'absolute', width: fillWidth, height: '100%', transition: 'width .6s ease',
   };
   return (
-    <div style={barStyle}>
-      <div style={fillStyle} />
+    <div className="bg-qalternative" style={barStyle}>
+      <div className="bg-qselected" style={fillStyle} />
     </div>
   );
 };
