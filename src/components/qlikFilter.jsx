@@ -4,20 +4,6 @@ import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import qlikObject from './qlikObject';
 
-const FilterItem = (props) => {
-  const handleClick = () => {
-    props.onItemClick(props.item.qElemNumber);
-  };
-  return (
-    <DropdownItem onClick={handleClick}>{props.item.qText}</DropdownItem>
-  );
-};
-
-FilterItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  onItemClick: PropTypes.func.isRequired,
-};
-
 @qlikObject
 export default class qlikFilter extends React.Component {
   static propTypes = {
@@ -56,3 +42,17 @@ export default class qlikFilter extends React.Component {
     );
   }
 }
+
+const FilterItem = (props) => {
+  const handleClick = () => {
+    props.onItemClick(props.item.qElemNumber);
+  };
+  return (
+    <DropdownItem onClick={handleClick}>{props.item.qText}</DropdownItem>
+  );
+};
+
+FilterItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func.isRequired,
+};
