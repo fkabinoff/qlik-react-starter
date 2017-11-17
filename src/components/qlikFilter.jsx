@@ -13,8 +13,18 @@ const FilterItem = (props) => {
   );
 };
 
+FilterItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  onItemClick: PropTypes.func.isRequired,
+};
+
 @qlikObject
 export default class qlikFilter extends React.Component {
+  static propTypes = {
+    data: PropTypes.object.isRequired,
+    select: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
 
@@ -35,7 +45,12 @@ export default class qlikFilter extends React.Component {
           Dropdown
         </DropdownToggle>
         <DropdownMenu>
-          {this.props.data[0].qMatrix.map(row => <FilterItem key={row[0].qElemNumber} item={row} onItemClick={this.props.select} />)}
+          {this.props.data[0].qMatrix.map(row =>
+            (<FilterItem
+              key={row[0].qElemNumber}
+              item={row}
+              onItemClick={this.props.select}
+            />))}
         </DropdownMenu>
       </Dropdown>
     );
