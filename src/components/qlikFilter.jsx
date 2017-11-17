@@ -58,9 +58,20 @@ FilterItem.propTypes = {
   onItemClick: PropTypes.func.isRequired,
 };
 
-const StateCountsBar = props => (
-  <div stuff={props.layout}>StateCounts</div>
-);
+const StateCountsBar = (props) => {
+  const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;
+  const totalStateCounts = Object.values(stateCounts).reduce((a, b) => a + b);
+  const fillWidth = `${((stateCounts.qOption + stateCounts.qSelected) * 100) / totalStateCounts}%`;
+  const barStyle = { position: 'relative', backgroundColor: '#c9c9c9', height: '3px' };
+  const fillStyle = {
+    position: 'absolute', width: fillWidth, height: '100%', background: '#C7AC5F', transition: 'width .6s ease',
+  };
+  return (
+    <div style={barStyle}>
+      <div style={fillStyle} />
+    </div>
+  );
+};
 StateCountsBar.propTypes = {
   layout: PropTypes.object.isRequired,
 };
