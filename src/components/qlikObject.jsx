@@ -7,10 +7,16 @@ const settings = {
   hypercube: {
     path: '/qHyperCubeDef',
     dataFunc: 'getHyperCubeData',
+    selectFunc: 'selectHyperCubeValues',
+    selectArgs: {
+      path: '/qHyperCubeDef', dimIndex: 0, values: [], toggle: true,
+    },
   },
   list: {
     path: '/qListObjectDef',
     dataFunc: 'getListObjectData',
+    selectFunc: 'selectListObjectValues',
+    selectArgs: { path: '/qListObjectDef', values: [], toggle: true },
   },
   expression: {
     path: null,
@@ -101,6 +107,13 @@ const qlikObject = Component => class extends React.Component {
   }
 
   @autobind
+  async select(qElemNumber) {
+    const args = Object.values({ ...this.settings.selectArgs, values: [qElemNumber] });
+    const qObject = await this.qObjectPromise;
+    qObject[this.settings.selectFunc](...args);
+  }
+
+  @autobind
   async applyPatches(patches) {
     const qObject = await this.qObjectPromise;
     qObject.applyPatches(patches);
@@ -112,7 +125,13 @@ const qlikObject = Component => class extends React.Component {
     } else if (this.state.error) {
       return <div>{this.state.error.message}</div>;
     }
-    return <Component {...this.state} />;
+    return (<Component
+      {...this.state}
+      setPages={this.setPages}
+      select={this.select}
+      beginSelections={this.beginSelections}
+      endSelections={this.endSelections}
+    />);
   }
 };
 

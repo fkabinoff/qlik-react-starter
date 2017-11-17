@@ -4,6 +4,15 @@ import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import qlikObject from './qlikObject';
 
+const FilterItem = (props) => {
+  const handleClick = () => {
+    props.onItemClick(props.item[0].qElemNumber);
+  };
+  return (
+    <DropdownItem onClick={handleClick}>{props.item[0].qText}</DropdownItem>
+  );
+};
+
 @qlikObject
 export default class qlikFilter extends React.Component {
   constructor(props) {
@@ -26,7 +35,7 @@ export default class qlikFilter extends React.Component {
           Dropdown
         </DropdownToggle>
         <DropdownMenu>
-          {this.props.data[0].qMatrix.map(row => <DropdownItem key={row[0].qElemNumber}>{row[0].qText}</DropdownItem>)}
+          {this.props.data[0].qMatrix.map(row => <FilterItem key={row[0].qElemNumber} item={row} onItemClick={this.props.select} />)}
         </DropdownMenu>
       </Dropdown>
     );
