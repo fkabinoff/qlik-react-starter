@@ -18,7 +18,7 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           presets: [['latest', {es2015: {modules: process.env.ENV === 'production' ? 'commonjs' : false}}], 'react'],
-          plugins: ['transform-decorators-legacy', 'transform-object-rest-spread', 'transform-class-properties', 'react-hot-loader/babel'],
+          plugins: ['transform-decorators-legacy', 'transform-object-rest-spread', 'transform-class-properties', 'extract-hoc/babel', 'react-hot-loader/babel'],
         },
       },
       {
