@@ -4,8 +4,7 @@ import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import qlikObject from './qlikObject';
 
-@qlikObject
-export default class qlikFilter extends React.Component {
+export default qlikObject(class qlikFilter extends React.Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
@@ -25,42 +24,35 @@ export default class qlikFilter extends React.Component {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 
+  @autobind
+  select(e) {
+    this.props.select(Number(e.target.dataset.qElemNumber));
+  }
+
   render() {
     return (
       <Dropdown className="d-inline-block" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle caret>
           Dropdown
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu onClick={this.select}>
           {this.props.data[0].qMatrix.map(row =>
-            (<FilterItem
-              key={row[0].qElemNumber}
-              item={row[0]}
-              onItemClick={this.props.select}
-            />))}
+            (
+              <DropdownItem
+                className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
+                key={row[0].qElemNumber}
+                data-q-elem-number={row[0].qElemNumber}
+                toggle={false}
+              >
+                {row[0].qText}
+              </DropdownItem>
+            ))}
         </DropdownMenu>
         <StateCountsBar layout={this.props.layout} />
       </Dropdown>
     );
   }
-}
-
-const FilterItem = (props) => {
-  const handleClick = () => {
-    props.onItemClick(props.item.qElemNumber);
-  };
-  return (
-    <DropdownItem
-      className={`border border-light border-left-0 border-right-0 ${props.item.qState}`}
-      onClick={handleClick}
-    >{props.item.qText}
-    </DropdownItem>
-  );
-};
-FilterItem.propTypes = {
-  item: PropTypes.object.isRequired,
-  onItemClick: PropTypes.func.isRequired,
-};
+});
 
 const StateCountsBar = (props) => {
   const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;
