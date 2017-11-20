@@ -1,2 +1,24 @@
-@import "_custom";
+@import "_variables";
 @import "~bootstrap/scss/bootstrap";
+
+
+// qlikFilter
+.dropdown-item.O { // Optional
+  color: $gray-900;
+}
+.dropdown-item.S { // Selected
+  color: $gray-100;
+  background-color: theme-color("qselected")
+}
+.dropdown-item.A { // Alternative
+  color: $gray-900;
+  background-color: theme-color("qalternative");
+}
+.dropdown-item.X { // Excluded 
+  color: $gray-100;
+  background-color: theme-color("qexcluded");
+}
+.dropdown-item.XS { // Excluded Selected
+  color: $gray-100;
+  background-color: theme-color("qexcluded");
+}

@@ -50,7 +50,11 @@ const FilterItem = (props) => {
     props.onItemClick(props.item.qElemNumber);
   };
   return (
-    <DropdownItem onClick={handleClick}>{props.item.qText}</DropdownItem>
+    <DropdownItem
+      className={`border border-light border-left-0 border-right-0 ${props.item.qState}`}
+      onClick={handleClick}
+    >{props.item.qText}
+    </DropdownItem>
   );
 };
 FilterItem.propTypes = {

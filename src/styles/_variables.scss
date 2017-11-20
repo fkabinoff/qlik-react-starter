@@ -50,7 +50,7 @@ $colors: (
   cyan: $cyan,
   white: $white,
   gray: $gray-600,
-  gray-dark: $gray-800
+  gray-dark: $gray-800,
 ) !default;
 
 $theme-colors: (
@@ -65,7 +65,7 @@ $theme-colors: (
   qselected: #52CC52,
   qalternative: #ddd,
   qexcluded: #A9A9A9
-) !default;
+);
 
 
 // Options
@@ -73,3 +73,12 @@ $theme-colors: (
 // Quickly modify global styling by enabling or disabling optional features.
 
 $enable-rounded: false;
+
+$dropdown-link-color:            $gray-900 !default;
+$dropdown-link-hover-color:      initial;
+$dropdown-link-hover-bg:         initial;
+
+$dropdown-link-active-color:     initial;
+$dropdown-link-active-bg:        initial;
+
+$dropdown-padding-y:             0;
