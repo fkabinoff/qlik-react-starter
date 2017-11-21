@@ -9,6 +9,8 @@ export default qlikObject(class qlikFilter extends React.Component {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
     select: PropTypes.func.isRequired,
+    beginSelections: PropTypes.func.isRequired,
+    endSelections: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -21,6 +23,12 @@ export default qlikObject(class qlikFilter extends React.Component {
 
   @autobind
   toggle() {
+    if (!this.state.dropdownOpen) {
+      this.props.beginSelections();
+    }
+    if (this.state.dropdownOpen) {
+      this.props.endSelections(true);
+    }
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
   }
 

@@ -95,7 +95,7 @@ const qlikObject = Component => class extends React.Component {
   @autobind
   async beginSelections() {
     const qObject = await this.qObjectPromise;
-    qObject.beginSelections(this.settings.path);
+    qObject.beginSelections([this.settings.path]);
   }
 
   @autobind
