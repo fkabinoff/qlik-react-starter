@@ -46,6 +46,7 @@ const qlikObject = Component => class extends React.Component {
       error: null,
       layout: {},
       data: {},
+      updating: false,
       qPages: this.props.qPages,
     };
   }
@@ -57,9 +58,11 @@ const qlikObject = Component => class extends React.Component {
       this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
       const qObject = await this.qObjectPromise;
       qObject.on('changed', () => { this.update(); });
-      this.update();
+      await this.update();
     } catch (error) {
-      this.setState({ loading: false, error });
+      this.setState({ error });
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
@@ -83,15 +86,10 @@ const qlikObject = Component => class extends React.Component {
   }
 
   async update() {
-    this.setState({ loading: true, error: null });
-    try {
-      await this.getLayout();
-      await this.getData();
-    } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ loading: false });
-    }
+    this.setState({ updating: true });
+    await this.getLayout();
+    await this.getData();
+    this.setState({ updating: false });
   }
 
   @autobind
@@ -120,10 +118,10 @@ const qlikObject = Component => class extends React.Component {
   }
 
   render() {
-    if (this.state.loading) {
-      return <div>Loading...</div>;
-    } else if (this.state.error) {
+    if (this.state.error) {
       return <div>{this.state.error.message}</div>;
+    } else if (this.state.loading) {
+      return <div>Loading...</div>;
     }
     return (<Component
       {...this.state}
