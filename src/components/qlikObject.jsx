@@ -35,7 +35,7 @@ const qlikObject = Component => class extends React.Component {
       qTop: 0,
       qLeft: 0,
       qWidth: 10,
-      qHeight: 20,
+      qHeight: 10,
     }],
   }
 
