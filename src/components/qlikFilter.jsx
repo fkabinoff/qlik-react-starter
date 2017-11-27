@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import qlikObject from './qlikObject';
-import scrollPagination from './scrollPagination';
+import qlikPageScroll from './qlikPageScroll';
 
 export default qlikObject(class qlikFilter extends React.Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
+    qPages: PropTypes.array.isRequired,
+    setPages: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     beginSelections: PropTypes.func.isRequired,
     endSelections: PropTypes.func.isRequired,
@@ -31,6 +33,8 @@ export default qlikObject(class qlikFilter extends React.Component {
       this.props.endSelections(true);
     }
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
+    const qPages = this.props.qPages.map(qPage => ({ ...qPage, qTop: 0 }));
+    this.props.setPages(qPages);
   }
 
   @autobind
@@ -45,7 +49,12 @@ export default qlikObject(class qlikFilter extends React.Component {
           Dropdown
         </DropdownToggle>
         <DropdownMenu onClick={this.select}>
-          <DropdownItemList data={this.props.data} />
+          <DropdownItemList
+            qMatrix={this.props.data[0].qMatrix}
+            qSize={this.props.layout.qListObject.qSize}
+            qPages={this.props.qPages}
+            setPages={this.props.setPages}
+          />
         </DropdownMenu>
         <StateCountsBar layout={this.props.layout} />
       </Dropdown>
@@ -53,9 +62,9 @@ export default qlikObject(class qlikFilter extends React.Component {
   }
 });
 
-const DropdownItemList = scrollPagination(props => (
+const DropdownItemList = qlikPageScroll(props => (
   <div>
-    {props.data[0].qMatrix.map(row =>
+    {props.qMatrix.map(row =>
         (
           <DropdownItem
             className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
@@ -69,7 +78,7 @@ const DropdownItemList = scrollPagination(props => (
   </div>
 ));
 DropdownItemList.propTypes = {
-  data: PropTypes.array.isRequired,
+  qMatrix: PropTypes.array.isRequired,
 };
 
 const StateCountsBar = (props) => {

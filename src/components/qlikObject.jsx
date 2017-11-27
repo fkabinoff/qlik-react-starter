@@ -68,7 +68,7 @@ const qlikObject = Component => class extends React.Component {
 
   @autobind
   setPages(qPages) {
-    this.setState({ qPages });
+    this.setState({ qPages }, this.getData);
   }
 
   settings = settings[this.props.type];
