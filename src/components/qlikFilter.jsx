@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import qlikObject from './qlikObject';
+import scrollPagination from './scrollPagination';
 
 export default qlikObject(class qlikFilter extends React.Component {
   static propTypes = {
@@ -44,23 +45,32 @@ export default qlikObject(class qlikFilter extends React.Component {
           Dropdown
         </DropdownToggle>
         <DropdownMenu onClick={this.select}>
-          {this.props.data[0].qMatrix.map(row =>
-            (
-              <DropdownItem
-                className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
-                key={row[0].qElemNumber}
-                data-q-elem-number={row[0].qElemNumber}
-                toggle={false}
-              >
-                {row[0].qText}
-              </DropdownItem>
-            ))}
+          <DropdownItemList data={this.props.data} />
         </DropdownMenu>
         <StateCountsBar layout={this.props.layout} />
       </Dropdown>
     );
   }
 });
+
+const DropdownItemList = scrollPagination(props => (
+  <div>
+    {props.data[0].qMatrix.map(row =>
+        (
+          <DropdownItem
+            className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
+            key={row[0].qElemNumber}
+            data-q-elem-number={row[0].qElemNumber}
+            toggle={false}
+          >
+            {row[0].qText}
+          </DropdownItem>
+        ))}
+  </div>
+));
+DropdownItemList.propTypes = {
+  data: PropTypes.array.isRequired,
+};
 
 const StateCountsBar = (props) => {
   const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;
