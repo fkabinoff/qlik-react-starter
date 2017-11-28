@@ -49,6 +49,7 @@ export default qlikObject(class qlikFilter extends React.Component {
           Dropdown
         </DropdownToggle>
         <DropdownMenu onClick={this.select}>
+          <SearchList />
           <DropdownItemList
             qMatrix={this.props.data[0].qMatrix}
             qSize={this.props.layout.qListObject.qSize}
@@ -80,6 +81,10 @@ const DropdownItemList = qlikPageScroll(props => (
 DropdownItemList.propTypes = {
   qMatrix: PropTypes.array.isRequired,
 };
+
+const SearchList = () => {
+  
+}
 
 const StateCountsBar = (props) => {
   const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;
