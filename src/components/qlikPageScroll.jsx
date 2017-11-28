@@ -4,19 +4,18 @@ import PropTypes from 'prop-types';
 
 const qlikPageScroll = Component => class extends React.Component {
   static propTypes = {
-    qMatrix: PropTypes.array.isRequired,
     qSize: PropTypes.object.isRequired,
     qPages: PropTypes.array.isRequired,
     setPages: PropTypes.func.isRequired,
-    height: PropTypes.number,
+    viewportHeight: PropTypes.number,
     threshold: PropTypes.number,
-    hang: PropTypes.number,
+    tail: PropTypes.number,
   }
 
   static defaultProps = {
-    height: 200,
+    viewportHeight: 200,
     threshold: 20,
-    hang: 2,
+    tail: 5,
   }
 
   constructor(props) {
@@ -38,11 +37,11 @@ const qlikPageScroll = Component => class extends React.Component {
 
   render() {
     return (
-      <div style={{ height: `${this.props.height}px`, overflowY: 'auto' }} onScroll={this.handleScroll}>
+      <div style={{ height: `${this.props.viewportHeight}px`, overflowY: 'auto' }} onScroll={this.handleScroll}>
         <div style={{ height: '100%', overflowY: 'hidden', transform: `translateY(${this.state.scrollTop}px)` }}>
           <Component {...this.props} />
         </div>
-        <div style={{ height: `${this.props.threshold * (this.props.qSize.qcy - this.props.hang)}px` }} />
+        <div style={{ height: `${this.props.threshold * (this.props.qSize.qcy - this.props.tail)}px` }} />
       </div>
     );
   }
