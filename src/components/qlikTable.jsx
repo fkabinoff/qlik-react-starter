@@ -5,7 +5,7 @@ import { Table } from 'reactstrap';
 import qlikObject from './qlikObject';
 import qlikPageScroll from './qlikPageScroll';
 
-export default qlikObject(class qlikTable extends React.Component {
+export default qlikObject(qlikPageScroll(class qlikTable extends React.Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
@@ -23,6 +23,8 @@ export default qlikObject(class qlikTable extends React.Component {
     this.state = {
       sortColumn: 0,
     };
+
+    console.log(this.props);
   }
 
   @autobind
@@ -31,50 +33,30 @@ export default qlikObject(class qlikTable extends React.Component {
   }
 
   render() {
+    const labels = [
+      ...this.props.layout.qHyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle),
+      ...this.props.layout.qHyperCube.qMeasureInfo.map(measure => measure.qFallbackTitle),
+    ];
     return (
       <Table responsive>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Table heading</th>
-            <th>Table heading</th>
-            <th>Table heading</th>
-            <th>Table heading</th>
-            <th>Table heading</th>
-            <th>Table heading</th>
+            {labels.map(label => (
+              <th key={label}>{label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-            <td>Table cell</td>
-          </tr>
+          {this.props.data[0].qMatrix.map(row => (
+            <tr key={row.reduce((a, b) => a.qElemNumber.toString().concat(b.qElemNumber.toString()))}>
+              {row.map(col => (
+                <td key={col.qText}>{col.qText}</td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </Table>
     );
   }
-});
+}));
 
