@@ -14,6 +14,8 @@ export default qlikObject(class qlikFilter extends React.Component {
     select: PropTypes.func.isRequired,
     beginSelections: PropTypes.func.isRequired,
     endSelections: PropTypes.func.isRequired,
+    searchListObjectFor: PropTypes.func.isRequired,
+    acceptListObjectSearch: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -21,6 +23,7 @@ export default qlikObject(class qlikFilter extends React.Component {
 
     this.state = {
       dropdownOpen: false,
+      searchListInputValue: '',
     };
   }
 
@@ -42,19 +45,38 @@ export default qlikObject(class qlikFilter extends React.Component {
     this.props.select(Number(e.target.dataset.qElemNumber));
   }
 
+  @autobind
+  searchListObjectFor(event) {
+    this.setState({ searchListInputValue: event.target.value });
+    this.props.searchListObjectFor(event.target.value);
+  }
+
+  @autobind
+  acceptListObjectSearch(event) {
+    if (event.charCode === 13) {
+      this.setState({ searchListInputValue: '' });
+      this.props.acceptListObjectSearch();
+    }
+  }
+
   render() {
     return (
       <Dropdown className="d-inline-block" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle caret>
           Dropdown
         </DropdownToggle>
-        <DropdownMenu onClick={this.select}>
-          <SearchList />
+        <DropdownMenu>
+          <SearchList
+            value={this.state.searchListInputValue}
+            searchListObjectFor={this.searchListObjectFor}
+            acceptListObjectSearch={this.acceptListObjectSearch}
+          />
           <DropdownItemList
-            qMatrix={this.props.data[0].qMatrix}
             qSize={this.props.layout.qListObject.qSize}
             qPages={this.props.qPages}
             setPages={this.props.setPages}
+            qMatrix={this.props.data[0].qMatrix}
+            select={this.select}
           />
         </DropdownMenu>
         <StateCountsBar layout={this.props.layout} />
@@ -72,6 +94,7 @@ const DropdownItemList = qlikPageScroll(props => (
             key={row[0].qElemNumber}
             data-q-elem-number={row[0].qElemNumber}
             toggle={false}
+            onClick={props.select}
           >
             {row[0].qText}
           </DropdownItem>
@@ -80,11 +103,17 @@ const DropdownItemList = qlikPageScroll(props => (
 ));
 DropdownItemList.propTypes = {
   qMatrix: PropTypes.array.isRequired,
+  select: PropTypes.func.isRequired,
 };
 
-const SearchList = () => {
-  
-}
+const SearchList = props => (
+  <input type="text" placeholder="Search..." value={props.value} onChange={props.searchListObjectFor} onKeyPress={props.acceptListObjectSearch} />
+);
+SearchList.propTypes = {
+  value: PropTypes.string.isRequired,
+  searchListObjectFor: PropTypes.func.isRequired,
+  acceptListObjectSearch: PropTypes.func.isRequired,
+};
 
 const StateCountsBar = (props) => {
   const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;

@@ -112,6 +112,18 @@ const qlikObject = Component => class extends React.Component {
   }
 
   @autobind
+  async searchListObjectFor(string) {
+    const qObject = await this.qObjectPromise;
+    qObject.searchListObjectFor('/qListObjectDef', string);
+  }
+
+  @autobind
+  async acceptListObjectSearch() {
+    const qObject = await this.qObjectPromise;
+    qObject.acceptListObjectSearch('/qListObjectDef', true);
+  }
+
+  @autobind
   async applyPatches(patches) {
     const qObject = await this.qObjectPromise;
     qObject.applyPatches(patches);
@@ -129,6 +141,8 @@ const qlikObject = Component => class extends React.Component {
       select={this.select}
       beginSelections={this.beginSelections}
       endSelections={this.endSelections}
+      searchListObjectFor={this.searchListObjectFor}
+      acceptListObjectSearch={this.acceptListObjectSearch}
     />);
   }
 };
