@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'reactstrap';
 import qlikObject from './qlikObject';
 import qlikPageScroll from './qlikPageScroll';
 
@@ -66,10 +66,10 @@ export default qlikObject(class qlikFilter extends React.Component {
           Dropdown
         </DropdownToggle>
         <DropdownMenu>
-          <SearchList
+          <Input
             value={this.state.searchListInputValue}
-            searchListObjectFor={this.searchListObjectFor}
-            acceptListObjectSearch={this.acceptListObjectSearch}
+            onChange={this.searchListObjectFor}
+            onKeyPress={this.acceptListObjectSearch}
           />
           <DropdownItemList
             qSize={this.props.layout.qListObject.qSize}
@@ -104,15 +104,6 @@ const DropdownItemList = qlikPageScroll(props => (
 DropdownItemList.propTypes = {
   qMatrix: PropTypes.array.isRequired,
   select: PropTypes.func.isRequired,
-};
-
-const SearchList = props => (
-  <input className="form-control" type="text" placeholder="Search..." value={props.value} onChange={props.searchListObjectFor} onKeyPress={props.acceptListObjectSearch} />
-);
-SearchList.propTypes = {
-  value: PropTypes.string.isRequired,
-  searchListObjectFor: PropTypes.func.isRequired,
-  acceptListObjectSearch: PropTypes.func.isRequired,
 };
 
 const StateCountsBar = (props) => {
