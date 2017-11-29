@@ -13,4 +13,22 @@ qProps.testList = {
   },
 };
 
+qProps.testCube = {
+  qInfo: {
+    qType: 'visualization',
+  },
+  qHyperCubeDef: {
+    qDimensions: [{
+      qDef: {
+        qFieldDefs: ['Product Group Desc'],
+      },
+    }],
+    qMeasures: [{
+      qDef: {
+        qDef: 'Sum(Sales)',
+      },
+    }],
+  },
+};
+
 export default qProps;

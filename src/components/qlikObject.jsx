@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import qDocPromise from '../qDoc';
 
 const settings = {
-  hypercube: {
+  qHyperCube: {
     path: '/qHyperCubeDef',
     dataFunc: 'getHyperCubeData',
     selectFunc: 'selectHyperCubeValues',
@@ -12,7 +12,7 @@ const settings = {
       path: '/qHyperCubeDef', dimIndex: 0, values: [], toggle: true,
     },
   },
-  list: {
+  qListObject: {
     path: '/qListObjectDef',
     dataFunc: 'getListObjectData',
     selectFunc: 'selectListObjectValues',
@@ -27,7 +27,7 @@ const settings = {
 const qlikObject = Component => class extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
-    type: PropTypes.oneOf(['hypercube', 'list', 'expression']).isRequired,
+    type: PropTypes.oneOf(['qHyperCube', 'qListObject', 'expression']).isRequired,
     qPages: PropTypes.array,
   };
   static defaultProps = {
@@ -48,6 +48,7 @@ const qlikObject = Component => class extends React.Component {
       data: {},
       updating: false,
       qPages: this.props.qPages,
+      qSize: {},
     };
   }
 
@@ -76,7 +77,7 @@ const qlikObject = Component => class extends React.Component {
   async getLayout() {
     const qObject = await this.qObjectPromise;
     const layout = await qObject.getLayout();
-    this.setState({ layout });
+    this.setState({ layout, qSize: layout[this.props.type].qSize });
   }
 
   async getData() {

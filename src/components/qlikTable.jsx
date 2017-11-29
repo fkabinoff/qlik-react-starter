@@ -10,6 +10,7 @@ export default qlikObject(class qlikTable extends React.Component {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
     qPages: PropTypes.array.isRequired,
+    qSize: PropTypes.object.isRequired,
     setPages: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     beginSelections: PropTypes.func.isRequired,
@@ -20,7 +21,7 @@ export default qlikObject(class qlikTable extends React.Component {
     super(props);
 
     this.state = {
-      sortColumn: 0
+      sortColumn: 0,
     };
   }
 
@@ -76,5 +77,4 @@ export default qlikObject(class qlikTable extends React.Component {
     );
   }
 });
-
 

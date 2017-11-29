@@ -1,5 +1,6 @@
 import React from 'react';
 import QlikFilter from './qlikFilter';
+import QlikTable from './qlikTable';
 import qDocPromise from '../qDoc';
 import qProps from '../qProps';
 
@@ -31,8 +32,8 @@ export default class Root extends React.Component {
     }
     return (
       <div>
-        Stuff
-        <QlikFilter qProp={qProps.testList} type="list" />
+        <QlikFilter qProp={qProps.testList} type="qListObject" />
+        <QlikTable qProp={qProps.testCube} type="qHyperCube" />
       </div>
     );
   }
