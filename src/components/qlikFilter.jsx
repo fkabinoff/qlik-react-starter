@@ -107,7 +107,7 @@ DropdownItemList.propTypes = {
 };
 
 const SearchList = props => (
-  <input type="text" placeholder="Search..." value={props.value} onChange={props.searchListObjectFor} onKeyPress={props.acceptListObjectSearch} />
+  <input className="form-control" type="text" placeholder="Search..." value={props.value} onChange={props.searchListObjectFor} onKeyPress={props.acceptListObjectSearch} />
 );
 SearchList.propTypes = {
   value: PropTypes.string.isRequired,
