@@ -9,7 +9,6 @@ export default class qlikFilter extends React.Component {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
     qPages: PropTypes.array.isRequired,
-    qSize: PropTypes.object.isRequired,
     setPages: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     beginSelections: PropTypes.func.isRequired,
@@ -72,7 +71,7 @@ export default class qlikFilter extends React.Component {
             onKeyPress={this.acceptListObjectSearch}
           />
           <DropdownItemList
-            qSize={this.props.qSize}
+            qSize={this.props.layout.qListObject.qSize}
             qPages={this.props.qPages}
             setPages={this.props.setPages}
             qMatrix={this.props.data[0].qMatrix}
