@@ -145,6 +145,7 @@ export default class QlikObject extends React.Component {
       endSelections={this.endSelections}
       searchListObjectFor={this.searchListObjectFor}
       acceptListObjectSearch={this.acceptListObjectSearch}
+      applyPatches={this.applyPatches}
     />);
   }
 }

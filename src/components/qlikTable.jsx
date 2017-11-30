@@ -11,6 +11,7 @@ export default class QlikTable extends React.Component {
     qPages: PropTypes.array.isRequired,
     setPages: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
+    applyPatches: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -19,6 +20,17 @@ export default class QlikTable extends React.Component {
     this.state = {
       sortColumn: 0,
     };
+  }
+
+  @autobind
+  async setSortColumn(event) {
+    const index = Number(event.target.dataset.index);
+    await this.props.applyPatches([{
+      qOp: 'replace',
+      qPath: '/qHyperCubeDef/qInterColumnSortOrder',
+      qValue: JSON.stringify([index]),
+    }]);
+    this.setState({ sortColumn: index });
   }
 
   @autobind
@@ -41,8 +53,15 @@ export default class QlikTable extends React.Component {
         <Table responsive>
           <thead>
             <tr>
-              {labels.map(label => (
-                <th key={label}>{label}</th>
+              {labels.map((label, index) => (
+                <th
+                  className={index === this.state.sortColumn ? 'active' : null}
+                  key={label}
+                  data-index={index}
+                  onClick={this.setSortColumn}
+                >
+                  {label}
+                </th>
               ))}
             </tr>
           </thead>
