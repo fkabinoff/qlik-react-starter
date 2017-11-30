@@ -36,6 +36,7 @@ export default class QlikTable extends React.Component {
         qSize={this.props.layout.qHyperCube.qSize}
         qPages={this.props.qPages}
         setPages={this.props.setPages}
+        viewportHeight={400}
       >
         <Table responsive>
           <thead>

@@ -42,7 +42,7 @@ export default class QlikPageScroll extends React.Component {
         <div style={{ height: '100%', overflowY: 'hidden', transform: `translateY(${this.state.scrollTop}px)` }}>
           {this.props.children}
         </div>
-        <div style={{ height: `${this.props.threshold * (this.props.qSize.qcy - this.props.tail)}px` }} />
+        <div style={{ height: `${Math.max(0, this.props.threshold * (this.props.qSize.qcy - this.props.tail))}px` }} />
       </div>
     );
   }

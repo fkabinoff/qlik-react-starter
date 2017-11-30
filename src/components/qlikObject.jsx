@@ -69,7 +69,7 @@ export default class QlikObject extends React.Component {
 
   @autobind
   setPages(qPages) {
-    this.setState({ qPages }, this.getData);
+    this.setState({ qPages }, this.update);
   }
 
   settings = settings[this.props.type];
