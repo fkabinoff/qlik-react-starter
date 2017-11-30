@@ -2,7 +2,7 @@ import React from 'react';
 import autobind from 'autobind-decorator';
 import PropTypes from 'prop-types';
 
-const qlikPageScroll = Component => class extends React.Component {
+export default class QlikPageScroll extends React.Component {
   static propTypes = {
     qSize: PropTypes.object.isRequired,
     qPages: PropTypes.array.isRequired,
@@ -10,6 +10,7 @@ const qlikPageScroll = Component => class extends React.Component {
     viewportHeight: PropTypes.number,
     threshold: PropTypes.number,
     tail: PropTypes.number,
+    children: PropTypes.node.isRequired,
   }
 
   static defaultProps = {
@@ -39,12 +40,10 @@ const qlikPageScroll = Component => class extends React.Component {
     return (
       <div style={{ height: `${this.props.viewportHeight}px`, overflowY: 'auto' }} onScroll={this.handleScroll}>
         <div style={{ height: '100%', overflowY: 'hidden', transform: `translateY(${this.state.scrollTop}px)` }}>
-          <Component {...this.props} />
+          {this.props.children}
         </div>
         <div style={{ height: `${this.props.threshold * (this.props.qSize.qcy - this.props.tail)}px` }} />
       </div>
     );
   }
-};
-
-export default qlikPageScroll;
+}

@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'reactstrap';
-import qlikObject from './qlikObject';
-import qlikPageScroll from './qlikPageScroll';
+import QlikPageScroll from './qlikPageScroll';
 
-export default qlikObject(class qlikFilter extends React.Component {
+export default class qlikFilter extends React.Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
@@ -84,10 +83,10 @@ export default qlikObject(class qlikFilter extends React.Component {
       </Dropdown>
     );
   }
-});
+}
 
-const DropdownItemList = qlikPageScroll(props => (
-  <div>
+const DropdownItemList = props => (
+  <QlikPageScroll qSize={props.qSize} qPages={props.qPages} setPages={props.setPages}>
     {props.qMatrix.map(row =>
         (
           <DropdownItem
@@ -100,9 +99,12 @@ const DropdownItemList = qlikPageScroll(props => (
             {row[0].qText}
           </DropdownItem>
         ))}
-  </div>
-));
+  </QlikPageScroll>
+);
 DropdownItemList.propTypes = {
+  qSize: PropTypes.object.isRequired,
+  qPages: PropTypes.object.isRequired,
+  setPages: PropTypes.func.isRequired,
   qMatrix: PropTypes.array.isRequired,
   select: PropTypes.func.isRequired,
 };

@@ -24,11 +24,12 @@ const settings = {
   },
 };
 
-const qlikObject = Component => class extends React.Component {
+export default class QlikObject extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
     type: PropTypes.oneOf(['qHyperCube', 'qListObject', 'expression']).isRequired,
     qPages: PropTypes.array,
+    Component: PropTypes.func.isRequired,
   };
   static defaultProps = {
     qPages: [{
@@ -48,7 +49,6 @@ const qlikObject = Component => class extends React.Component {
       data: {},
       updating: false,
       qPages: this.props.qPages,
-      qSize: {},
     };
   }
 
@@ -136,6 +136,7 @@ const qlikObject = Component => class extends React.Component {
     } else if (this.state.loading) {
       return <div>Loading...</div>;
     }
+    const { Component } = this.props;
     return (<Component
       {...this.state}
       setPages={this.setPages}
@@ -146,6 +147,4 @@ const qlikObject = Component => class extends React.Component {
       acceptListObjectSearch={this.acceptListObjectSearch}
     />);
   }
-};
-
-export default qlikObject;
+}

@@ -9,12 +9,7 @@ export default qlikObject(qlikPageScroll(class qlikTable extends React.Component
   static propTypes = {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
-    qPages: PropTypes.array.isRequired,
-    qSize: PropTypes.object.isRequired,
-    setPages: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
-    beginSelections: PropTypes.func.isRequired,
-    endSelections: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -48,7 +43,10 @@ export default qlikObject(qlikPageScroll(class qlikTable extends React.Component
         </thead>
         <tbody>
           {this.props.data[0].qMatrix.map(row => (
-            <tr key={row.reduce((a, b) => a.qElemNumber.toString().concat(b.qElemNumber.toString()))}>
+            <tr
+              key={row.reduce((a, b) => (
+                a.qElemNumber.toString().concat(b.qElemNumber.toString())))}
+            >
               {row.map(col => (
                 <td key={col.qText}>{col.qText}</td>
               ))}
