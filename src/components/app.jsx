@@ -1,7 +1,7 @@
 import React from 'react';
-import QlikObject from './qlikObject';
-import QlikFilter from './qlikFilter';
-import QlikTable from './qlikTable';
+import QlikObject from './QlikObject';
+import QlikFilter from './QlikFilter';
+import QlikTable from './QlikTable';
 import qDocPromise from '../qDoc';
 import qProps from '../qProps';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Table } from 'reactstrap';
-import QlikPageScroll from './qlikPageScroll';
+import QlikPageScroll from './QlikPageScroll';
 
 export default class QlikTable extends React.Component {
   static propTypes = {

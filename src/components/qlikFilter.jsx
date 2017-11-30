@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'reactstrap';
-import QlikPageScroll from './qlikPageScroll';
+import QlikPageScroll from './QlikPageScroll';
 
-export default class qlikFilter extends React.Component {
+export default class QlikFilter extends React.Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     layout: PropTypes.object.isRequired,
