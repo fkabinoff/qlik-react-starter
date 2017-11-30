@@ -103,7 +103,7 @@ const DropdownItemList = props => (
 );
 DropdownItemList.propTypes = {
   qSize: PropTypes.object.isRequired,
-  qPages: PropTypes.object.isRequired,
+  qPages: PropTypes.array.isRequired,
   setPages: PropTypes.func.isRequired,
   qMatrix: PropTypes.array.isRequired,
   select: PropTypes.func.isRequired,
