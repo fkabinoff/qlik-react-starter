@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'reactstrap';
-import QlikPageScroll from './QlikPageScroll';
+import QlikVirtualScroll from './QlikVirtualScroll';
 
 export default class QlikFilter extends React.Component {
   static propTypes = {
@@ -70,12 +70,13 @@ export default class QlikFilter extends React.Component {
             onChange={this.searchListObjectFor}
             onKeyPress={this.acceptListObjectSearch}
           />
-          <DropdownItemList
-            qSize={this.props.layout.qListObject.qSize}
-            qPages={this.props.qPages}
-            setPages={this.props.setPages}
+          <QlikVirtualScroll
             qMatrix={this.props.data[0].qMatrix}
-            select={this.select}
+            qPages={this.props.qPages}
+            qSize={this.props.layout.qListObject.qSize}
+            render={DropdownItemList}
+            renderProps={{ select: this.select }}
+            setPages={this.props.setPages}
           />
         </DropdownMenu>
         <StateCountsBar layout={this.props.layout} />
@@ -85,25 +86,20 @@ export default class QlikFilter extends React.Component {
 }
 
 const DropdownItemList = props => (
-  <QlikPageScroll qSize={props.qSize} qPages={props.qPages} setPages={props.setPages}>
-    {props.qMatrix.map(row =>
-        (
-          <DropdownItem
-            className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
-            key={row[0].qElemNumber}
-            data-q-elem-number={row[0].qElemNumber}
-            toggle={false}
-            onClick={props.select}
-          >
-            {row[0].qText}
-          </DropdownItem>
-        ))}
-  </QlikPageScroll>
+  props.qMatrix.map(row =>
+    (
+      <DropdownItem
+        className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
+        key={row[0].qElemNumber}
+        data-q-elem-number={row[0].qElemNumber}
+        toggle={false}
+        onClick={props.select}
+      >
+        {row[0].qText}
+      </DropdownItem>
+    ))
 );
 DropdownItemList.propTypes = {
-  qSize: PropTypes.object.isRequired,
-  qPages: PropTypes.array.isRequired,
-  setPages: PropTypes.func.isRequired,
   qMatrix: PropTypes.array.isRequired,
   select: PropTypes.func.isRequired,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import { Table } from 'reactstrap';
-import QlikPageScroll from './QlikPageScroll';
+import QlikVirtualScroll from './QlikVirtualScroll';
 
 export default class QlikTable extends React.Component {
   static propTypes = {
@@ -44,7 +44,7 @@ export default class QlikTable extends React.Component {
       ...this.props.layout.qHyperCube.qMeasureInfo.map(measure => measure.qFallbackTitle),
     ];
     return (
-      <QlikPageScroll
+      <QlikVirtualScroll
         qSize={this.props.layout.qHyperCube.qSize}
         qPages={this.props.qPages}
         setPages={this.props.setPages}
@@ -78,7 +78,7 @@ export default class QlikTable extends React.Component {
             ))}
           </tbody>
         </Table>
-      </QlikPageScroll>
+      </QlikVirtualScroll>
     );
   }
 }
