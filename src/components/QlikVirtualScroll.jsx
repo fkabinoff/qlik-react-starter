@@ -31,6 +31,9 @@ export default class QlikVirtualScroll extends React.Component {
     };
   }
 
+
+  // NOTE: Instead of trying to find physical point at which data runs out,
+  // just check if index is close to end of qMatrix in memory
   @autobind
   handleScroll(event) {
     const currScrollPos = event.target.scrollTop;
