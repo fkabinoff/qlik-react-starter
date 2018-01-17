@@ -28,27 +28,26 @@ export default class QlikObject extends React.Component {
   static propTypes = {
     qProp: PropTypes.object.isRequired,
     type: PropTypes.oneOf(['qHyperCube', 'qListObject', 'expression']).isRequired,
-    qPages: PropTypes.array,
     Component: PropTypes.func.isRequired,
+    qPage: PropTypes.object,
   };
   static defaultProps = {
-    qPages: [{
+    qPage: {
       qTop: 0,
       qLeft: 0,
       qWidth: 10,
       qHeight: 10,
-    }],
+    },
   }
 
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      error: null,
-      layout: {},
-      data: {},
       updating: false,
-      qPages: this.props.qPages,
+      error: null,
+      qLayout: {},
+      qData: {},
     };
   }
 
@@ -68,29 +67,28 @@ export default class QlikObject extends React.Component {
   }
 
   @autobind
-  setPages(qPages) {
-    this.setState({ qPages }, this.update);
+  setPage(qPage) {
+    this.update(qPage);
   }
 
   settings = settings[this.props.type];
 
   async getLayout() {
     const qObject = await this.qObjectPromise;
-    const layout = await qObject.getLayout();
-    this.setState({ layout });
+    const qLayout = await qObject.getLayout();
+    return qLayout[this.props.type];
   }
 
-  async getData() {
+  async getData(qPage) {
     const qObject = await this.qObjectPromise;
-    const data = await qObject[this.settings.dataFunc](this.settings.path, this.state.qPages);
-    this.setState({ data });
+    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [qPage]);
+    return qDataPages[0];
   }
 
-  async update() {
+  async update(qPage = this.props.qPage) {
     this.setState({ updating: true });
-    await this.getLayout();
-    await this.getData();
-    this.setState({ updating: false });
+    const [qLayout, qData] = await Promise.all([this.getLayout(), this.getData(qPage)]);
+    this.setState({ updating: false, qLayout, qData });
   }
 
   @autobind
@@ -139,7 +137,7 @@ export default class QlikObject extends React.Component {
     const { Component } = this.props;
     return (<Component
       {...this.state}
-      setPages={this.setPages}
+      setPage={this.setPage}
       select={this.select}
       beginSelections={this.beginSelections}
       endSelections={this.endSelections}

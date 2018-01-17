@@ -4,87 +4,83 @@ import PropTypes from 'prop-types';
 
 export default class QlikVirtualScroll extends React.Component {
   static propTypes = {
-    qMatrix: PropTypes.array.isRequired,
-    qPages: PropTypes.array.isRequired,
-    qSize: PropTypes.object.isRequired,
+    qData: PropTypes.array.isRequired,
+    qLayout: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
     renderProps: PropTypes.object,
-    setPages: PropTypes.func.isRequired,
+    setPage: PropTypes.func.isRequired,
+    rowHeight: PropTypes.number,
     viewportHeight: PropTypes.number,
-    virtualRowHeight: PropTypes.number,
   }
 
   static defaultProps = {
     renderProps: {},
+    rowHeight: 40,
     viewportHeight: 200,
-    virtualRowHeight: 34,
   }
 
   constructor(props) {
     super(props);
 
     this.state = {
-      prevScrollPos: 0,
-      qTop: 0,
       start: 0,
+      end: this.props.viewportHeight / this.props.rowHeight,
       translateY: 0,
     };
   }
 
-
-  // NOTE: Instead of trying to find physical point at which data runs out,
-  // just check if index is close to end of qMatrix in memory
   @autobind
   handleScroll(event) {
-    const currScrollPos = event.target.scrollTop;
-    const { viewportHeight, virtualRowHeight } = this.props;
-    const { qTop, qHeight } = this.props.qPages[0];
-    const start = Math.floor(currScrollPos / virtualRowHeight);
-    const end = Math.ceil((currScrollPos + viewportHeight) / virtualRowHeight);
+    const scrollTop = event.target.scrollTop;
+    const {
+      qData, qLayout, viewportHeight, rowHeight,
+    } = this.props;
 
-    // if scroll is going down, and index of last loaded element is less than the end index
-    if (this.state.prevScrollPos < currScrollPos && this.state.qTop + qHeight < end) {
-      console.log('down');
-      const qPages = this.props.qPages.map(qPage => ({ ...qPage, qTop: start }));
-      this.props.setPages(qPages);
-      this.setState({ qTop: start, start: start - qTop });
-    } else if (this.state.prevScrollPos > currScrollPos && this.state.qTop > start) {
-      console.log('up');
-      const qPages = this.props.qPages.map(qPage => ({ ...qPage, qTop: end - qHeight }));
-      this.props.setPages(qPages);
-      this.setState({ qTop: end - qHeight, start: end - qHeight });
-    } else {
-      console.log('else');
-      this.setState({ start });
+    const numOfViewportItems = viewportHeight / rowHeight;
+    const start = scrollTop / rowHeight;
+    const end = start + numOfViewportItems;
+    const translateY = rowHeight * start;
+
+    if (qData.qArea.qTop > start) {
+      const qTop = Math.max(0, start - qData.qArea.qHeight + numOfViewportItems);
+      const qPage = { ...qData.qArea, qTop };
+      this.props.setPage(qPage);
+    } else if (qData.qArea.qTop + qData.qArea.qHeight < end) {
+      const qTop = start;
+      const qPage = { ...qData.qArea, qTop };
+      this.props.setPage(qPage);
     }
-
-    this.setState({ prevScrollPos: currScrollPos, translateY: currScrollPos });
+    this.setState({ start, end, translateY });
   }
 
   render() {
-    const qMatrix = this.props.qMatrix.slice(this.state.start);
+    const { start, end, translateY } = this.state;
+    const {
+      qData, qLayout, viewportHeight, rowHeight, renderProps,
+    } = this.props;
+    const qMatrix = qData.qMatrix.slice(start - qData.qArea.qTop, end - qData.qArea.qTop);
     return (
       <div
         style={{
           position: 'relative',
           width: '200px',
-          height: `${this.props.viewportHeight}px`,
+          height: `${viewportHeight}px`,
           overflowY: 'auto',
         }}
         onScroll={this.handleScroll}
       >
         <div
           style={{
-            transform: `translateY(${this.state.translateY}px)`,
+            transform: `translateY(${translateY}px)`,
             width: '100%',
             maxHeight: '100%',
             overflow: 'hidden',
             position: 'absolute',
           }}
         >
-          {this.props.render({ ...this.props.renderProps, qMatrix })}
+          {this.props.render({ ...renderProps, qMatrix })}
         </div>
-        <div style={{ height: `${Math.max(0, this.props.virtualRowHeight * this.props.qSize.qcy)}px` }} />
+        <div style={{ height: `${rowHeight * qLayout.qSize.qcy}px` }} />
       </div>
     );
   }

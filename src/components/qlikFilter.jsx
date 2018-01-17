@@ -6,10 +6,9 @@ import QlikVirtualScroll from './QlikVirtualScroll';
 
 export default class QlikFilter extends React.Component {
   static propTypes = {
-    data: PropTypes.array.isRequired,
-    layout: PropTypes.object.isRequired,
-    qPages: PropTypes.array.isRequired,
-    setPages: PropTypes.func.isRequired,
+    qData: PropTypes.object.isRequired,
+    qLayout: PropTypes.object.isRequired,
+    setPage: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     beginSelections: PropTypes.func.isRequired,
     endSelections: PropTypes.func.isRequired,
@@ -35,8 +34,8 @@ export default class QlikFilter extends React.Component {
       this.props.endSelections(true);
     }
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
-    const qPages = this.props.qPages.map(qPage => ({ ...qPage, qTop: 0 }));
-    this.props.setPages(qPages);
+    const qPage = { ...this.props.qData.qArea, qTop: 0 };
+    this.props.setPage(qPage);
   }
 
   @autobind
@@ -71,15 +70,16 @@ export default class QlikFilter extends React.Component {
             onKeyPress={this.acceptListObjectSearch}
           />
           <QlikVirtualScroll
-            qMatrix={this.props.data[0].qMatrix}
-            qPages={this.props.qPages}
-            qSize={this.props.layout.qListObject.qSize}
+            qData={this.props.qData}
+            qLayout={this.props.qLayout}
             render={DropdownItemList}
             renderProps={{ select: this.select }}
-            setPages={this.props.setPages}
+            setPage={this.props.setPage}
+            rowHeight={30}
+            viewportHeight={150}
           />
         </DropdownMenu>
-        <StateCountsBar layout={this.props.layout} />
+        <StateCountsBar layout={this.props.qLayout} />
       </Dropdown>
     );
   }
@@ -94,6 +94,7 @@ const DropdownItemList = props => (
         data-q-elem-number={row[0].qElemNumber}
         toggle={false}
         onClick={props.select}
+        style={{ height: '30px' }}
       >
         {row[0].qText}
       </DropdownItem>
@@ -105,7 +106,7 @@ DropdownItemList.propTypes = {
 };
 
 const StateCountsBar = (props) => {
-  const stateCounts = props.layout.qListObject.qDimensionInfo.qStateCounts;
+  const stateCounts = props.layout.qDimensionInfo.qStateCounts;
   const totalStateCounts = Object.values(stateCounts).reduce((a, b) => a + b);
   const fillWidth = `${((stateCounts.qOption + stateCounts.qSelected) * 100) / totalStateCounts}%`;
   const barStyle = { position: 'relative', height: '0.25rem' };
