@@ -47,7 +47,7 @@ export default class QlikObject extends React.Component {
       updating: false,
       error: null,
       qLayout: {},
-      qData: {},
+      qData: { qArea: this.props.qPage },
     };
   }
 
@@ -81,11 +81,11 @@ export default class QlikObject extends React.Component {
 
   async getData(qPage) {
     const qObject = await this.qObjectPromise;
-    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [qPage]);
+    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [{ ...qPage, qHeight: this.props.qPage.qHeight }]);
     return qDataPages[0];
   }
 
-  async update(qPage = this.props.qPage) {
+  async update(qPage = this.state.qData.qArea) {
     this.setState({ updating: true });
     const [qLayout, qData] = await Promise.all([this.getLayout(), this.getData(qPage)]);
     this.setState({ updating: false, qLayout, qData });

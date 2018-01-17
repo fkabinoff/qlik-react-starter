@@ -27,15 +27,17 @@ export default class QlikFilter extends React.Component {
 
   @autobind
   toggle() {
+    const qPage = { ...this.props.qData.qArea, qTop: 0 };
+    this.props.setPage(qPage);
+
     if (!this.state.dropdownOpen) {
       this.props.beginSelections();
     }
     if (this.state.dropdownOpen) {
       this.props.endSelections(true);
     }
+
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
-    const qPage = { ...this.props.qData.qArea, qTop: 0 };
-    this.props.setPage(qPage);
   }
 
   @autobind
