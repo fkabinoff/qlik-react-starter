@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default class QlikVirtualScroll extends React.Component {
   static propTypes = {
-    qData: PropTypes.array.isRequired,
+    qData: PropTypes.object.isRequired,
     qLayout: PropTypes.object.isRequired,
     render: PropTypes.func.isRequired,
     renderProps: PropTypes.object,
@@ -31,9 +31,9 @@ export default class QlikVirtualScroll extends React.Component {
 
   @autobind
   handleScroll(event) {
-    const scrollTop = event.target.scrollTop;
+    const { scrollTop } = event.target;
     const {
-      qData, qLayout, viewportHeight, rowHeight,
+      qData, viewportHeight, rowHeight,
     } = this.props;
 
     const numOfViewportItems = viewportHeight / rowHeight;
@@ -42,7 +42,7 @@ export default class QlikVirtualScroll extends React.Component {
     const translateY = rowHeight * start;
 
     if (qData.qArea.qTop > start) {
-      const qTop = Math.max(0, start - qData.qArea.qHeight + numOfViewportItems);
+      const qTop = Math.max(0, (start - qData.qArea.qHeight) + numOfViewportItems);
       const qPage = { ...qData.qArea, qTop };
       this.props.setPage(qPage);
     } else if (qData.qArea.qTop + qData.qArea.qHeight < end) {

@@ -81,7 +81,7 @@ export default class QlikObject extends React.Component {
 
   async getData(qPage) {
     const qObject = await this.qObjectPromise;
-    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [{ ...qPage, qHeight: this.props.qPage.qHeight }]);
+    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [{ ...qPage, qHeight: this.props.qPage.qHeight }]); // eslint-disable-line max-len
     return qDataPages[0];
   }
 

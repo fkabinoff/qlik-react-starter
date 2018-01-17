@@ -4,6 +4,43 @@ import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'reactstrap';
 import QlikVirtualScroll from './QlikVirtualScroll';
 
+const DropdownItemList = props => (
+  props.qMatrix.map(row =>
+    (
+      <DropdownItem
+        className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
+        key={row[0].qElemNumber}
+        data-q-elem-number={row[0].qElemNumber}
+        toggle={false}
+        onClick={props.select}
+      >
+        {row[0].qText}
+      </DropdownItem>
+    ))
+);
+DropdownItemList.propTypes = {
+  qMatrix: PropTypes.array.isRequired,
+  select: PropTypes.func.isRequired,
+};
+
+const StateCountsBar = (props) => {
+  const stateCounts = props.layout.qDimensionInfo.qStateCounts;
+  const totalStateCounts = Object.values(stateCounts).reduce((a, b) => a + b);
+  const fillWidth = `${((stateCounts.qOption + stateCounts.qSelected) * 100) / totalStateCounts}%`;
+  const barStyle = { position: 'relative', height: '0.25rem' };
+  const fillStyle = {
+    position: 'absolute', width: fillWidth, height: '100%', transition: 'width .6s ease',
+  };
+  return (
+    <div className="bg-qalternative" style={barStyle}>
+      <div className="bg-qselected" style={fillStyle} />
+    </div>
+  );
+};
+StateCountsBar.propTypes = {
+  layout: PropTypes.object.isRequired,
+};
+
 export default class QlikFilter extends React.Component {
   static propTypes = {
     qData: PropTypes.object.isRequired,
@@ -77,8 +114,8 @@ export default class QlikFilter extends React.Component {
             render={DropdownItemList}
             renderProps={{ select: this.select }}
             setPage={this.props.setPage}
-            rowHeight={30}
-            viewportHeight={150}
+            rowHeight={34}
+            viewportHeight={170}
           />
         </DropdownMenu>
         <StateCountsBar layout={this.props.qLayout} />
@@ -86,41 +123,3 @@ export default class QlikFilter extends React.Component {
     );
   }
 }
-
-const DropdownItemList = props => (
-  props.qMatrix.map(row =>
-    (
-      <DropdownItem
-        className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
-        key={row[0].qElemNumber}
-        data-q-elem-number={row[0].qElemNumber}
-        toggle={false}
-        onClick={props.select}
-        style={{ height: '30px' }}
-      >
-        {row[0].qText}
-      </DropdownItem>
-    ))
-);
-DropdownItemList.propTypes = {
-  qMatrix: PropTypes.array.isRequired,
-  select: PropTypes.func.isRequired,
-};
-
-const StateCountsBar = (props) => {
-  const stateCounts = props.layout.qDimensionInfo.qStateCounts;
-  const totalStateCounts = Object.values(stateCounts).reduce((a, b) => a + b);
-  const fillWidth = `${((stateCounts.qOption + stateCounts.qSelected) * 100) / totalStateCounts}%`;
-  const barStyle = { position: 'relative', height: '0.25rem' };
-  const fillStyle = {
-    position: 'absolute', width: fillWidth, height: '100%', transition: 'width .6s ease',
-  };
-  return (
-    <div className="bg-qalternative" style={barStyle}>
-      <div className="bg-qselected" style={fillStyle} />
-    </div>
-  );
-};
-StateCountsBar.propTypes = {
-  layout: PropTypes.object.isRequired,
-};
