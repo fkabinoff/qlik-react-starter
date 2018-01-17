@@ -5,18 +5,20 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'rea
 import QlikVirtualScroll from './QlikVirtualScroll';
 
 const DropdownItemList = props => (
-  props.qMatrix.map(row =>
-    (
-      <DropdownItem
-        className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
-        key={row[0].qElemNumber}
-        data-q-elem-number={row[0].qElemNumber}
-        toggle={false}
-        onClick={props.select}
-      >
-        {row[0].qText}
-      </DropdownItem>
-    ))
+  <span>
+    {props.qMatrix.map(row =>
+      (
+        <DropdownItem
+          className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
+          key={row[0].qElemNumber}
+          data-q-elem-number={row[0].qElemNumber}
+          toggle={false}
+          onClick={props.select}
+        >
+          {row[0].qText}
+        </DropdownItem>
+      ))}
+  </span>
 );
 DropdownItemList.propTypes = {
   qMatrix: PropTypes.array.isRequired,
@@ -111,8 +113,8 @@ export default class QlikFilter extends React.Component {
           <QlikVirtualScroll
             qData={this.props.qData}
             qLayout={this.props.qLayout}
-            render={DropdownItemList}
-            renderProps={{ select: this.select }}
+            Component={DropdownItemList}
+            componentProps={{ select: this.select }}
             setPage={this.props.setPage}
             rowHeight={34}
             viewportHeight={170}

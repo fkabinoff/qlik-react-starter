@@ -6,15 +6,15 @@ export default class QlikVirtualScroll extends React.Component {
   static propTypes = {
     qData: PropTypes.object.isRequired,
     qLayout: PropTypes.object.isRequired,
-    render: PropTypes.func.isRequired,
-    renderProps: PropTypes.object,
+    Component: PropTypes.func.isRequired,
+    componentProps: PropTypes.object,
     setPage: PropTypes.func.isRequired,
     rowHeight: PropTypes.number,
     viewportHeight: PropTypes.number,
   }
 
   static defaultProps = {
-    renderProps: {},
+    componentProps: {},
     rowHeight: 40,
     viewportHeight: 200,
   }
@@ -56,14 +56,13 @@ export default class QlikVirtualScroll extends React.Component {
   render() {
     const { start, end, translateY } = this.state;
     const {
-      qData, qLayout, viewportHeight, rowHeight, renderProps,
+      qData, qLayout, viewportHeight, rowHeight, Component, componentProps,
     } = this.props;
     const qMatrix = qData.qMatrix.slice(start - qData.qArea.qTop, end - qData.qArea.qTop);
     return (
       <div
         style={{
           position: 'relative',
-          width: '200px',
           height: `${viewportHeight}px`,
           overflowY: 'auto',
         }}
@@ -78,7 +77,7 @@ export default class QlikVirtualScroll extends React.Component {
             position: 'absolute',
           }}
         >
-          {this.props.render({ ...renderProps, qMatrix })}
+          <Component {...componentProps} qMatrix={qMatrix} />
         </div>
         <div style={{ height: `${rowHeight * qLayout.qSize.qcy}px` }} />
       </div>

@@ -29,9 +29,11 @@ export default class QlikObject extends React.Component {
     qProp: PropTypes.object.isRequired,
     type: PropTypes.oneOf(['qHyperCube', 'qListObject', 'expression']).isRequired,
     Component: PropTypes.func.isRequired,
+    componentProps: PropTypes.object,
     qPage: PropTypes.object,
   };
   static defaultProps = {
+    componentProps: {},
     qPage: {
       qTop: 0,
       qLeft: 0,
@@ -136,6 +138,7 @@ export default class QlikObject extends React.Component {
     }
     const { Component } = this.props;
     return (<Component
+      {...this.props.componentProps}
       {...this.state}
       setPage={this.setPage}
       select={this.select}

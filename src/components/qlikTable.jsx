@@ -4,14 +4,36 @@ import autobind from 'autobind-decorator';
 import { Table } from 'reactstrap';
 import QlikVirtualScroll from './QlikVirtualScroll';
 
+const TableBody = ({ qMatrix, columnWidths }) => (
+  <Table style={{ tableLayout: 'fixed', width: '100%' }}>
+    <tbody style={{ display: 'block' }}>
+      {qMatrix.map(row => (
+        <tr
+          key={row.reduce((a, b) => (
+            a.qElemNumber.toString().concat(b.qElemNumber.toString())))}
+          style={{ display: 'block' }}
+        >
+          {row.map((col, i) => (
+            <td key={col.qText} style={{ display: 'inline-block', height: '50px', width: `${columnWidths[i]}%` }}>{col.qText}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </Table>
+);
+TableBody.propTypes = {
+  qMatrix: PropTypes.array.isRequired,
+  columnWidths: PropTypes.array.isRequired,
+};
+
 export default class QlikTable extends React.Component {
   static propTypes = {
-    data: PropTypes.array.isRequired,
-    layout: PropTypes.object.isRequired,
-    qPages: PropTypes.array.isRequired,
-    setPages: PropTypes.func.isRequired,
+    qData: PropTypes.object.isRequired,
+    qLayout: PropTypes.object.isRequired,
+    setPage: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     applyPatches: PropTypes.func.isRequired,
+    columnWidths: PropTypes.array.isRequired,
   }
 
   constructor(props) {
@@ -20,6 +42,17 @@ export default class QlikTable extends React.Component {
     this.state = {
       sortColumn: 0,
     };
+  }
+
+  componentDidMount() {
+    const thead = this.node.getElementsByTagName('thead')[0];
+    const tbody = this.node.getElementsByTagName('tbody')[0];
+    thead.style.width = `${tbody.clientWidth}px`;
+  }
+  componentDidUpdate() {
+    const thead = this.node.getElementsByTagName('thead')[0];
+    const tbody = this.node.getElementsByTagName('tbody')[0];
+    thead.style.width = `${tbody.clientWidth}px`;
   }
 
   @autobind
@@ -39,23 +72,22 @@ export default class QlikTable extends React.Component {
   }
 
   render() {
+    const {
+      qData, qLayout, setPage, columnWidths,
+    } = this.props;
     const labels = [
-      ...this.props.layout.qHyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle),
-      ...this.props.layout.qHyperCube.qMeasureInfo.map(measure => measure.qFallbackTitle),
+      ...qLayout.qDimensionInfo.map(dim => dim.qFallbackTitle),
+      ...qLayout.qMeasureInfo.map(measure => measure.qFallbackTitle),
     ];
     return (
-      <QlikVirtualScroll
-        qSize={this.props.layout.qHyperCube.qSize}
-        qPages={this.props.qPages}
-        setPages={this.props.setPages}
-        viewportHeight={400}
-      >
-        <Table responsive>
-          <thead>
-            <tr>
+      <div ref={(node) => { this.node = node; }}>
+        <Table style={{ tableLayout: 'fixed', width: '100%' }}>
+          <thead style={{ display: 'block' }}>
+            <tr style={{ display: 'block' }}>
               {labels.map((label, index) => (
                 <th
                   className={index === this.state.sortColumn ? 'active' : null}
+                  style={{ display: 'inline-block', width: `${columnWidths[index]}%` }}
                   key={label}
                   data-index={index}
                   onClick={this.setSortColumn}
@@ -65,20 +97,17 @@ export default class QlikTable extends React.Component {
               ))}
             </tr>
           </thead>
-          <tbody>
-            {this.props.data[0].qMatrix.map(row => (
-              <tr
-                key={row.reduce((a, b) => (
-                  a.qElemNumber.toString().concat(b.qElemNumber.toString())))}
-              >
-                {row.map(col => (
-                  <td key={col.qText}>{col.qText}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
         </Table>
-      </QlikVirtualScroll>
+        <QlikVirtualScroll
+          qData={qData}
+          qLayout={qLayout}
+          Component={TableBody}
+          componentProps={{ columnWidths }}
+          setPage={setPage}
+          rowHeight={50}
+          viewportHeight={400}
+        />
+      </div>
     );
   }
 }
