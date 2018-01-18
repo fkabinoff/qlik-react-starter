@@ -47,7 +47,7 @@ export default class QlikFilter extends React.Component {
   static propTypes = {
     qData: PropTypes.object.isRequired,
     qLayout: PropTypes.object.isRequired,
-    setPage: PropTypes.func.isRequired,
+    offset: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     beginSelections: PropTypes.func.isRequired,
     endSelections: PropTypes.func.isRequired,
@@ -66,8 +66,7 @@ export default class QlikFilter extends React.Component {
 
   @autobind
   toggle() {
-    const qPage = { ...this.props.qData.qArea, qTop: 0 };
-    this.props.setPage(qPage);
+    this.props.offset(0);
 
     if (!this.state.dropdownOpen) {
       this.props.beginSelections();
@@ -115,7 +114,7 @@ export default class QlikFilter extends React.Component {
             qLayout={this.props.qLayout}
             Component={DropdownItemList}
             componentProps={{ select: this.select }}
-            setPage={this.props.setPage}
+            offset={this.props.offset}
             rowHeight={34}
             viewportHeight={170}
           />

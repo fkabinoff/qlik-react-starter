@@ -8,7 +8,7 @@ export default class QlikVirtualScroll extends React.Component {
     qLayout: PropTypes.object.isRequired,
     Component: PropTypes.func.isRequired,
     componentProps: PropTypes.object,
-    setPage: PropTypes.func.isRequired,
+    offset: PropTypes.func.isRequired,
     rowHeight: PropTypes.number,
     viewportHeight: PropTypes.number,
   }
@@ -43,12 +43,10 @@ export default class QlikVirtualScroll extends React.Component {
 
     if (qData.qArea.qTop > start) {
       const qTop = Math.max(0, (start - qData.qArea.qHeight) + numOfViewportItems);
-      const qPage = { ...qData.qArea, qTop };
-      this.props.setPage(qPage);
+      this.props.offset(qTop);
     } else if (qData.qArea.qTop + qData.qArea.qHeight < end) {
       const qTop = start;
-      const qPage = { ...qData.qArea, qTop };
-      this.props.setPage(qPage);
+      this.props.offset(qTop);
     }
     this.setState({ start, end, translateY });
   }

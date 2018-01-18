@@ -30,7 +30,7 @@ export default class QlikTable extends React.Component {
   static propTypes = {
     qData: PropTypes.object.isRequired,
     qLayout: PropTypes.object.isRequired,
-    setPage: PropTypes.func.isRequired,
+    offset: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
     applyPatches: PropTypes.func.isRequired,
     columnWidths: PropTypes.array.isRequired,
@@ -80,7 +80,7 @@ export default class QlikTable extends React.Component {
 
   render() {
     const {
-      qData, qLayout, setPage, columnWidths,
+      qData, qLayout, offset, columnWidths,
     } = this.props;
     const labels = [
       ...qLayout.qDimensionInfo.map(dim => dim.qFallbackTitle),
@@ -110,7 +110,7 @@ export default class QlikTable extends React.Component {
           qLayout={qLayout}
           Component={TableBody}
           componentProps={{ columnWidths }}
-          setPage={setPage}
+          offset={offset}
           rowHeight={50}
           viewportHeight={400}
         />

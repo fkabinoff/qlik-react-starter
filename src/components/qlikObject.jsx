@@ -68,11 +68,6 @@ export default class QlikObject extends React.Component {
     }
   }
 
-  @autobind
-  setPage(qPage) {
-    this.update(qPage);
-  }
-
   settings = settings[this.props.type];
 
   async getLayout() {
@@ -81,15 +76,20 @@ export default class QlikObject extends React.Component {
     return qLayout[this.props.type];
   }
 
-  async getData(qPage) {
+  async getData(qTop) {
     const qObject = await this.qObjectPromise;
-    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [{ ...qPage, qHeight: this.props.qPage.qHeight }]); // eslint-disable-line max-len
+    const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [{ ...this.props.qPage, qTop }]); // eslint-disable-line max-len
     return qDataPages[0];
   }
 
-  async update(qPage = this.state.qData.qArea) {
+  @autobind
+  offset(qTop) {
+    this.update(qTop);
+  }
+
+  async update(qTop = this.state.qData.qArea.qTop) {
     this.setState({ updating: true });
-    const [qLayout, qData] = await Promise.all([this.getLayout(), this.getData(qPage)]);
+    const [qLayout, qData] = await Promise.all([this.getLayout(), this.getData(qTop)]);
     this.setState({ updating: false, qLayout, qData });
   }
 
@@ -140,7 +140,7 @@ export default class QlikObject extends React.Component {
     return (<Component
       {...this.props.componentProps}
       {...this.state}
-      setPage={this.setPage}
+      offset={this.offset}
       select={this.select}
       beginSelections={this.beginSelections}
       endSelections={this.endSelections}
