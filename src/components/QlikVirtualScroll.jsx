@@ -75,7 +75,7 @@ export default class QlikVirtualScroll extends React.Component {
             position: 'absolute',
           }}
         >
-          <Component {...componentProps} qMatrix={qMatrix} />
+          <Component {...componentProps} qMatrix={qMatrix} rowHeight={rowHeight} />
         </div>
         <div style={{ height: `${rowHeight * qcy}px` }} />
       </div>

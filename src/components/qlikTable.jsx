@@ -32,7 +32,7 @@ TableHead.propTypes = {
   setSortColumn: PropTypes.func.isRequired,
 };
 
-const TableBody = ({ qMatrix, columnWidths }) => (
+const TableBody = ({ qMatrix, rowHeight, columnWidths }) => (
   <Table className="fixed-table w-100">
     <tbody className="d-block">
       {qMatrix.map(row => (
@@ -42,7 +42,7 @@ const TableBody = ({ qMatrix, columnWidths }) => (
           className="d-block"
         >
           {row.map((col, i) => (
-            <td key={col.qText} className="d-inline-block" style={{ height: '50px', width: `${columnWidths[i]}%` }}>
+            <td key={col.qText} className="d-inline-block" style={{ height: `${rowHeight}px`, width: `${columnWidths[i]}%` }}>
               {col.qText}
             </td>
           ))}
@@ -53,6 +53,7 @@ const TableBody = ({ qMatrix, columnWidths }) => (
 );
 TableBody.propTypes = {
   qMatrix: PropTypes.array.isRequired,
+  rowHeight: PropTypes.number.isRequired,
   columnWidths: PropTypes.array.isRequired,
 };
 

@@ -4,16 +4,17 @@ import autobind from 'autobind-decorator';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input } from 'reactstrap';
 import QlikVirtualScroll from './QlikVirtualScroll';
 
-const DropdownItemList = props => (
+const DropdownItemList = ({ qMatrix, rowHeight, select }) => (
   <span>
-    {props.qMatrix.map(row =>
+    {qMatrix.map(row =>
       (
         <DropdownItem
           className={`border border-light border-left-0 border-right-0 ${row[0].qState}`}
           key={row[0].qElemNumber}
           data-q-elem-number={row[0].qElemNumber}
           toggle={false}
-          onClick={props.select}
+          onClick={select}
+          style={{ height: `${rowHeight}px` }}
         >
           {row[0].qText}
         </DropdownItem>
@@ -22,6 +23,7 @@ const DropdownItemList = props => (
 );
 DropdownItemList.propTypes = {
   qMatrix: PropTypes.array.isRequired,
+  rowHeight: PropTypes.number.isRequired,
   select: PropTypes.func.isRequired,
 };
 
