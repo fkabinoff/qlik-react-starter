@@ -45,14 +45,14 @@ export default class QlikTable extends React.Component {
   }
 
   componentDidMount() {
-    const thead = this.node.getElementsByTagName('thead')[0];
-    const tbody = this.node.getElementsByTagName('tbody')[0];
-    thead.style.width = `${tbody.clientWidth}px`;
+    this.resize();
+    window.addEventListener('resize', this.resize);
   }
   componentDidUpdate() {
-    const thead = this.node.getElementsByTagName('thead')[0];
-    const tbody = this.node.getElementsByTagName('tbody')[0];
-    thead.style.width = `${tbody.clientWidth}px`;
+    this.resize();
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
   }
 
   @autobind
@@ -64,6 +64,13 @@ export default class QlikTable extends React.Component {
       qValue: JSON.stringify([index]),
     }]);
     this.setState({ sortColumn: index });
+  }
+
+  @autobind
+  resize() {
+    const thead = this.node.getElementsByTagName('thead')[0];
+    const tbody = this.node.getElementsByTagName('tbody')[0];
+    thead.style.width = `${tbody.clientWidth}px`;
   }
 
   @autobind
