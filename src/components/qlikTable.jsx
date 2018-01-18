@@ -5,16 +5,18 @@ import { Table } from 'reactstrap';
 import QlikVirtualScroll from './QlikVirtualScroll';
 
 const TableBody = ({ qMatrix, columnWidths }) => (
-  <Table style={{ tableLayout: 'fixed', width: '100%' }}>
-    <tbody style={{ display: 'block' }}>
+  <Table className="fixed-table w-100">
+    <tbody className="d-block">
       {qMatrix.map(row => (
         <tr
           key={row.reduce((a, b) => (
             a.qElemNumber.toString().concat(b.qElemNumber.toString())))}
-          style={{ display: 'block' }}
+          className="d-block"
         >
           {row.map((col, i) => (
-            <td key={col.qText} style={{ display: 'inline-block', height: '50px', width: `${columnWidths[i]}%` }}>{col.qText}</td>
+            <td key={col.qText} className="d-inline-block" style={{ height: '50px', width: `${columnWidths[i]}%` }}>
+              {col.qText}
+            </td>
           ))}
         </tr>
       ))}
@@ -88,13 +90,13 @@ export default class QlikTable extends React.Component {
     ];
     return (
       <div ref={(node) => { this.node = node; }}>
-        <Table style={{ tableLayout: 'fixed', width: '100%' }}>
-          <thead style={{ display: 'block' }}>
-            <tr style={{ display: 'block' }}>
+        <Table className="fixed-table w-100 mb-0">
+          <thead className="d-block">
+            <tr className="d-block">
               {labels.map((label, index) => (
                 <th
-                  className={index === this.state.sortColumn ? 'active' : null}
-                  style={{ display: 'inline-block', width: `${columnWidths[index]}%` }}
+                  className={`d-inline-block ${index === this.state.sortColumn ? 'active' : null}`}
+                  style={{ width: `${columnWidths[index]}%` }}
                   key={label}
                   data-index={index}
                   onClick={this.setSortColumn}
