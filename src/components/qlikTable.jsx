@@ -4,6 +4,34 @@ import autobind from 'autobind-decorator';
 import { Table } from 'reactstrap';
 import QlikVirtualScroll from './QlikVirtualScroll';
 
+const TableHead = ({
+  columnWidths, labels, sortColumn, setSortColumn,
+}) => (
+  <Table className="fixed-table w-100 mb-0">
+    <thead className="d-block">
+      <tr className="d-block">
+        {labels.map((label, index) => (
+          <th
+            className={`d-inline-block ${index === sortColumn ? 'active' : null}`}
+            style={{ width: `${columnWidths[index]}%` }}
+            key={label}
+            data-index={index}
+            onClick={setSortColumn}
+          >
+            {label}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  </Table>
+);
+TableHead.propTypes = {
+  columnWidths: PropTypes.array.isRequired,
+  labels: PropTypes.array.isRequired,
+  sortColumn: PropTypes.number.isRequired,
+  setSortColumn: PropTypes.func.isRequired,
+};
+
 const TableBody = ({ qMatrix, columnWidths }) => (
   <Table className="fixed-table w-100">
     <tbody className="d-block">
@@ -84,29 +112,19 @@ export default class QlikTable extends React.Component {
     const {
       qData, qLayout, offset, columnWidths,
     } = this.props;
+    const { sortColumn } = this.state;
     const labels = [
       ...qLayout.qHyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle),
       ...qLayout.qHyperCube.qMeasureInfo.map(measure => measure.qFallbackTitle),
     ];
     return (
       <div ref={(node) => { this.node = node; }}>
-        <Table className="fixed-table w-100 mb-0">
-          <thead className="d-block">
-            <tr className="d-block">
-              {labels.map((label, index) => (
-                <th
-                  className={`d-inline-block ${index === this.state.sortColumn ? 'active' : null}`}
-                  style={{ width: `${columnWidths[index]}%` }}
-                  key={label}
-                  data-index={index}
-                  onClick={this.setSortColumn}
-                >
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-        </Table>
+        <TableHead
+          columnWidths={columnWidths}
+          labels={labels}
+          sortColumn={sortColumn}
+          setSortColumn={this.setSortColumn}
+        />
         <QlikVirtualScroll
           qData={qData}
           qcy={qLayout.qHyperCube.qSize.qcy}
@@ -120,4 +138,3 @@ export default class QlikTable extends React.Component {
     );
   }
 }
-
