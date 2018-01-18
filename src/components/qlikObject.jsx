@@ -73,7 +73,7 @@ export default class QlikObject extends React.Component {
   async getLayout() {
     const qObject = await this.qObjectPromise;
     const qLayout = await qObject.getLayout();
-    return qLayout[this.props.type];
+    return qLayout;
   }
 
   async getData(qTop) {

@@ -83,8 +83,8 @@ export default class QlikTable extends React.Component {
       qData, qLayout, offset, columnWidths,
     } = this.props;
     const labels = [
-      ...qLayout.qDimensionInfo.map(dim => dim.qFallbackTitle),
-      ...qLayout.qMeasureInfo.map(measure => measure.qFallbackTitle),
+      ...qLayout.qHyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle),
+      ...qLayout.qHyperCube.qMeasureInfo.map(measure => measure.qFallbackTitle),
     ];
     return (
       <div ref={(node) => { this.node = node; }}>
@@ -107,7 +107,7 @@ export default class QlikTable extends React.Component {
         </Table>
         <QlikVirtualScroll
           qData={qData}
-          qLayout={qLayout}
+          qcy={qLayout.qHyperCube.qSize.qcy}
           Component={TableBody}
           componentProps={{ columnWidths }}
           offset={offset}

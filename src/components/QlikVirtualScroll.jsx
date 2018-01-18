@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default class QlikVirtualScroll extends React.Component {
   static propTypes = {
     qData: PropTypes.object.isRequired,
-    qLayout: PropTypes.object.isRequired,
+    qcy: PropTypes.number.isRequired,
     Component: PropTypes.func.isRequired,
     componentProps: PropTypes.object,
     offset: PropTypes.func.isRequired,
@@ -54,7 +54,7 @@ export default class QlikVirtualScroll extends React.Component {
   render() {
     const { start, end, translateY } = this.state;
     const {
-      qData, qLayout, viewportHeight, rowHeight, Component, componentProps,
+      qData, qcy, viewportHeight, rowHeight, Component, componentProps,
     } = this.props;
     const qMatrix = qData.qMatrix.slice(start - qData.qArea.qTop, end - qData.qArea.qTop);
     return (
@@ -77,7 +77,7 @@ export default class QlikVirtualScroll extends React.Component {
         >
           <Component {...componentProps} qMatrix={qMatrix} />
         </div>
-        <div style={{ height: `${rowHeight * qLayout.qSize.qcy}px` }} />
+        <div style={{ height: `${rowHeight * qcy}px` }} />
       </div>
     );
   }

@@ -25,10 +25,9 @@ DropdownItemList.propTypes = {
   select: PropTypes.func.isRequired,
 };
 
-const StateCountsBar = (props) => {
-  const stateCounts = props.layout.qDimensionInfo.qStateCounts;
-  const totalStateCounts = Object.values(stateCounts).reduce((a, b) => a + b);
-  const fillWidth = `${((stateCounts.qOption + stateCounts.qSelected) * 100) / totalStateCounts}%`;
+const StateCountsBar = ({ qStateCounts }) => {
+  const totalStateCounts = Object.values(qStateCounts).reduce((a, b) => a + b);
+  const fillWidth = `${((qStateCounts.qOption + qStateCounts.qSelected) * 100) / totalStateCounts}%`;
   const barStyle = { position: 'relative', height: '0.25rem' };
   const fillStyle = {
     position: 'absolute', width: fillWidth, height: '100%', transition: 'width .6s ease',
@@ -40,7 +39,7 @@ const StateCountsBar = (props) => {
   );
 };
 StateCountsBar.propTypes = {
-  layout: PropTypes.object.isRequired,
+  qStateCounts: PropTypes.object.isRequired,
 };
 
 export default class QlikFilter extends React.Component {
@@ -111,7 +110,7 @@ export default class QlikFilter extends React.Component {
           />
           <QlikVirtualScroll
             qData={this.props.qData}
-            qLayout={this.props.qLayout}
+            qcy={this.props.qLayout.qListObject.qSize.qcy}
             Component={DropdownItemList}
             componentProps={{ select: this.select }}
             offset={this.props.offset}
@@ -119,7 +118,7 @@ export default class QlikFilter extends React.Component {
             viewportHeight={170}
           />
         </DropdownMenu>
-        <StateCountsBar layout={this.props.qLayout} />
+        <StateCountsBar qStateCounts={this.props.qLayout.qListObject.qDimensionInfo.qStateCounts} />
       </Dropdown>
     );
   }
