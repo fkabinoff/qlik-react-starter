@@ -27,3 +27,21 @@
 .fixed-table {
   table-layout: fixed;
 }
+th {
+  position: relative;
+  cursor: pointer;
+}
+th, td {
+  overflow: hidden;
+}
+th.active:after {
+  position: absolute;
+  top: calc(50% - 0.125rem);
+  margin-left: 0.5rem;
+  content:"";
+  width: 0; 
+  height: 0; 
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.5rem solid #666;
+}
