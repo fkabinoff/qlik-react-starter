@@ -21,12 +21,17 @@ qProps.testCube = {
     qDimensions: [{
       qDef: {
         qFieldDefs: ['Product Group Desc'],
+        qSortCriterias: [{ qSortByAscii: 1 }],
       },
     }],
     qMeasures: [{
       qDef: {
-        qDef: 'Sum(Sales)',
+        qDef: 'Sum([Sales Amount])',
+        qNumFormat: {
+          qType: 'M', qUseThou: 1, qDec: '.', qThou: ',', qFmt: '$#,##0.00;($#,##0.00)',
+        },
       },
+      qSortBy: { qSortByNumeric: -1 },
     }],
   },
 };
