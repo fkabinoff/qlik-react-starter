@@ -32,9 +32,13 @@ export default class Root extends React.Component {
       return <div>{this.state.error.message}</div>;
     }
     return (
-      <div>
-        <QlikObject qProp={qProps.testList} type="qListObject" Component={QlikFilter} />
-        <QlikObject qProp={qProps.testCube} type="qHyperCube" Component={QlikTable} componentProps={{ columnWidths: [50, 50] }} />
+      <div className="container">
+        <section className="my-3">
+          <QlikObject qProp={qProps.testList} type="qListObject" Component={QlikFilter} />
+        </section>
+        <section className="my-3">
+          <QlikObject qProp={qProps.testCube} type="qHyperCube" Component={QlikTable} componentProps={{ columnWidths: [50, 50] }} />
+        </section>
       </div>
     );
   }
