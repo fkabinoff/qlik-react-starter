@@ -32,7 +32,9 @@ TableHead.propTypes = {
   setSortColumn: PropTypes.func.isRequired,
 };
 
-const TableBody = ({ qMatrix, rowHeight, columnWidths }) => (
+const TableBody = ({
+  qMatrix, rowHeight, columnWidths, select,
+}) => (
   <Table className="fixed-table w-100">
     <tbody className="d-block">
       {qMatrix.map(row => (
@@ -42,7 +44,15 @@ const TableBody = ({ qMatrix, rowHeight, columnWidths }) => (
           className="d-block"
         >
           {row.map((col, i) => (
-            <td key={col.qText} className="d-inline-block" style={{ height: `${rowHeight}px`, width: `${columnWidths[i]}%` }}>
+            <td
+              key={col.qText}
+              className="d-inline-block"
+              style={{ height: `${rowHeight}px`, width: `${columnWidths[i]}%` }}
+              data-q-elem-number={col.qElemNumber}
+              data-index={i}
+              data-qstate={col.qState}
+              onClick={select}
+            >
               {col.qText}
             </td>
           ))}
@@ -55,6 +65,7 @@ TableBody.propTypes = {
   qMatrix: PropTypes.array.isRequired,
   rowHeight: PropTypes.number.isRequired,
   columnWidths: PropTypes.array.isRequired,
+  select: PropTypes.func.isRequired,
 };
 
 export default class QlikTable extends React.Component {
@@ -98,15 +109,17 @@ export default class QlikTable extends React.Component {
   }
 
   @autobind
+  select(e) {
+    if (e.target.dataset.qstate !== 'L') {
+      this.props.select(Number(e.target.dataset.qElemNumber), Number(e.target.dataset.index));
+    }
+  }
+
+  @autobind
   resize() {
     const thead = this.node.getElementsByTagName('thead')[0];
     const tbody = this.node.getElementsByTagName('tbody')[0];
     thead.style.width = `${tbody.clientWidth}px`;
-  }
-
-  @autobind
-  select(e) {
-    this.props.select(Number(e.target.dataset.qElemNumber));
   }
 
   render() {
@@ -130,7 +143,7 @@ export default class QlikTable extends React.Component {
           qData={qData}
           qcy={qLayout.qHyperCube.qSize.qcy}
           Component={TableBody}
-          componentProps={{ columnWidths }}
+          componentProps={{ columnWidths, select: this.select }}
           offset={offset}
           rowHeight={50}
           viewportHeight={400}

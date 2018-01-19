@@ -106,8 +106,8 @@ export default class QlikObject extends React.Component {
   }
 
   @autobind
-  async select(qElemNumber) {
-    const args = Object.values({ ...this.settings.selectArgs, values: [qElemNumber] });
+  async select(qElemNumber, dimIndex = 0) {
+    const args = Object.values({ ...this.settings.selectArgs, dimIndex, values: [qElemNumber] });
     const qObject = await this.qObjectPromise;
     qObject[this.settings.selectFunc](...args);
   }
