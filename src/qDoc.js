@@ -3,7 +3,7 @@ const schema = require('enigma.js/schemas/12.20.0.json');
 const SenseUtilities = require('enigma.js/sense-utilities');
 
 const url = SenseUtilities.buildUrl({
-  host: 'usrad-fka001.qliktech.com',
+  host: 'sense-demo.qlik.com',
   prefix: '',
 });
 
@@ -11,7 +11,7 @@ const session = enigma.create({ schema, url });
 
 async function qDocAsync() {
   const global = await session.open();
-  const qDoc = await global.openDoc('c7a1d0bb-f4e9-460e-9ab1-e205c18954b2');
+  const qDoc = await global.openDoc('372cbc85-f7fb-4db6-a620-9a5367845dce');
   return qDoc;
 }
 
