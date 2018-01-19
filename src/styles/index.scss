@@ -1,8 +1,6 @@
 @import "_variables";
 @import "~bootstrap/scss/bootstrap";
 
-
-// qlikFilter
 .dropdown-item.O { // Optional
   color: $gray-900;
 }
@@ -23,7 +21,6 @@
   background-color: theme-color("qexcluded");
 }
 
-//qliktable
 .fixed-table {
   table-layout: fixed;
 }
