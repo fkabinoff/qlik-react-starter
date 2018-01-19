@@ -38,7 +38,7 @@ export default class QlikObject extends React.Component {
       qTop: 0,
       qLeft: 0,
       qWidth: 10,
-      qHeight: 10,
+      qHeight: 100,
     },
   }
 
