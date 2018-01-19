@@ -109,7 +109,7 @@ export default class QlikFilter extends React.Component {
         <DropdownToggle caret>
           Dropdown
         </DropdownToggle>
-        <DropdownMenu>
+        <DropdownMenu style={{ width: '15rem' }}>
           <Input
             value={searchListInputValue}
             onChange={searchListObjectFor}
