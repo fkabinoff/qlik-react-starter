@@ -52,10 +52,11 @@ export default class QlikVirtualScroll extends React.Component {
   }
 
   render() {
-    const { start, end, translateY } = this.state;
+    const { handleScroll } = this;
     const {
       qData, qcy, viewportHeight, rowHeight, Component, componentProps,
     } = this.props;
+    const { start, end, translateY } = this.state;
     const qMatrix = qData.qMatrix.slice(start - qData.qArea.qTop, end - qData.qArea.qTop);
     return (
       <div
@@ -64,7 +65,7 @@ export default class QlikVirtualScroll extends React.Component {
           height: `${viewportHeight}px`,
           overflowY: 'auto',
         }}
-        onScroll={this.handleScroll}
+        onScroll={handleScroll}
       >
         <div
           style={{

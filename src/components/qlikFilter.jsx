@@ -99,28 +99,33 @@ export default class QlikFilter extends React.Component {
   }
 
   render() {
+    const {
+      select, toggle, searchListObjectFor, acceptListObjectSearch,
+    } = this;
+    const { qData, qLayout, offset } = this.props;
+    const { dropdownOpen, searchListInputValue } = this.state;
     return (
-      <Dropdown className="d-inline-block" isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+      <Dropdown className="d-inline-block" isOpen={dropdownOpen} toggle={toggle}>
         <DropdownToggle caret>
           Dropdown
         </DropdownToggle>
         <DropdownMenu>
           <Input
-            value={this.state.searchListInputValue}
-            onChange={this.searchListObjectFor}
-            onKeyPress={this.acceptListObjectSearch}
+            value={searchListInputValue}
+            onChange={searchListObjectFor}
+            onKeyPress={acceptListObjectSearch}
           />
           <QlikVirtualScroll
-            qData={this.props.qData}
-            qcy={this.props.qLayout.qListObject.qSize.qcy}
+            qData={qData}
+            qcy={qLayout.qListObject.qSize.qcy}
             Component={DropdownItemList}
-            componentProps={{ select: this.select }}
-            offset={this.props.offset}
+            componentProps={{ select }}
+            offset={offset}
             rowHeight={34}
             viewportHeight={170}
           />
         </DropdownMenu>
-        <StateCountsBar qStateCounts={this.props.qLayout.qListObject.qDimensionInfo.qStateCounts} />
+        <StateCountsBar qStateCounts={qLayout.qListObject.qDimensionInfo.qStateCounts} />
       </Dropdown>
     );
   }

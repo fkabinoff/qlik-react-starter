@@ -123,6 +123,7 @@ export default class QlikTable extends React.Component {
   }
 
   render() {
+    const { select, setSortColumn } = this;
     const {
       qData, qLayout, offset, columnWidths,
     } = this.props;
@@ -137,13 +138,13 @@ export default class QlikTable extends React.Component {
           columnWidths={columnWidths}
           labels={labels}
           sortColumn={sortColumn}
-          setSortColumn={this.setSortColumn}
+          setSortColumn={setSortColumn}
         />
         <QlikVirtualScroll
           qData={qData}
           qcy={qLayout.qHyperCube.qSize.qcy}
           Component={TableBody}
-          componentProps={{ columnWidths, select: this.select }}
+          componentProps={{ columnWidths, select }}
           offset={offset}
           rowHeight={50}
           viewportHeight={400}
