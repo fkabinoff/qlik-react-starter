@@ -49,7 +49,7 @@ export default class QlikObject extends React.Component {
       updating: false,
       error: null,
       qLayout: {},
-      qData: { qArea: this.props.qPage },
+      qData: {},
     };
   }
 
@@ -60,7 +60,7 @@ export default class QlikObject extends React.Component {
       this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
       const qObject = await this.qObjectPromise;
       qObject.on('changed', () => { this.update(); });
-      await this.update();
+      await this.update(this.props.qPage.qTop);
     } catch (error) {
       this.setState({ error });
     } finally {
