@@ -1,7 +1,7 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 import PropTypes from 'prop-types';
-import qDocPromise from '../qDoc';
+import { qDocPromise } from '../qConnections';
 
 const settings = {
   qHyperCube: {
