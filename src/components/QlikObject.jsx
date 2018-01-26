@@ -1,7 +1,7 @@
 import React from 'react';
 import autobind from 'autobind-decorator';
 import PropTypes from 'prop-types';
-import { qDocPromise } from '../qConnections';
+import qDocPromise from '../qDoc';
 
 const settings = {
   qHyperCube: {
@@ -45,7 +45,7 @@ export default class QlikObject extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       updating: false,
       error: null,
       qLayout: {},
@@ -53,19 +53,12 @@ export default class QlikObject extends React.Component {
     };
   }
 
-  async componentWillMount() {
-    this.setState({ loading: true, error: null });
-    try {
-      const qDoc = await qDocPromise;
-      this.qObjectPromise = qDoc.createSessionObject(this.props.qProp);
-      const qObject = await this.qObjectPromise;
-      qObject.on('changed', () => { this.update(); });
-      await this.update(this.props.qPage.qTop);
-    } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ loading: false });
-    }
+  componentWillMount() {
+    this.qObjectPromise = this.create();
+  }
+
+  componentDidMount() {
+    this.show();
   }
 
   settings = settings[this.props.type];
@@ -80,6 +73,28 @@ export default class QlikObject extends React.Component {
     const qObject = await this.qObjectPromise;
     const qDataPages = await qObject[this.settings.dataFunc](this.settings.path, [{ ...this.props.qPage, qTop }]); // eslint-disable-line max-len
     return qDataPages[0];
+  }
+
+  async create() {
+    try {
+      const qDoc = await qDocPromise;
+      const qObjectPromise = qDoc.createSessionObject(this.props.qProp);
+      return qObjectPromise;
+    } catch (error) {
+      this.setState({ error });
+      return undefined;
+    }
+  }
+
+  async show() {
+    try {
+      const qObject = await this.qObjectPromise;
+      qObject.on('changed', () => { this.update(); });
+      await this.update(this.props.qPage.qTop);
+      this.setState({ loading: false });
+    } catch (error) {
+      this.setState({ error });
+    }
   }
 
   @autobind

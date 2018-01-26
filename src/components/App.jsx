@@ -2,7 +2,7 @@ import React from 'react';
 import QlikObject from './QlikObject';
 import QlikFilter from './QlikFilter';
 import QlikTable from './QlikTable';
-import { qDocPromise } from '../qConnections';
+import qDocPromise from '../qDoc';
 import qProps from '../qProps';
 
 export default class Root extends React.Component {

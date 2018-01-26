@@ -1,53 +1,78 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
-import { qAppPromise } from '../qConnections';
+import qAppPromise from '../qApp';
 
 export default class QlikViz extends React.Component {
   static propTypes = {
     id: PropTypes.string,
-    type: PropTypes.oneOf(['barchart', 'boxplot', 'combochart', 'distributionplot', 'gauge', 'histogram', 'kpi', 'linechart', 'piechart', 'pivot-table', 'scatterplot', 'table', 'treemap', 'extension']),
+    type: PropTypes.oneOf([null, 'barchart', 'boxplot', 'combochart', 'distributionplot', 'gauge', 'histogram', 'kpi', 'linechart', 'piechart', 'pivot-table', 'scatterplot', 'table', 'treemap', 'extension']),
     cols: PropTypes.array,
     options: PropTypes.object,
+    width: PropTypes.string,
+    height: PropTypes.string,
   }
 
   static defaultProps = {
     id: null,
-    type: '',
+    type: null,
     cols: [],
     options: {},
+    width: '100%',
+    height: '400px',
   }
 
   constructor(props) {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       error: null,
     };
   }
 
-  async componentWillMount() {
-    this.setState({ loading: true, error: null });
+  componentWillMount() {
+    this.qVizPromise = this.create();
+  }
+
+  componentDidMount() {
+    this.show();
+  }
+
+  componentWillUnmount() {
+    this.close();
+  }
+
+  async create() {
     try {
-      const { id, type, cols, options } = this.props;
+      const {
+        id, type, cols, options,
+      } = this.props;
       const qApp = await qAppPromise;
-      this.qVizPromise = id ? await qApp.visualization.get(id) : await qApp.visualization.create(type, cols, options);
-    } catch(error) {
+      const qVizPromise = id ? qApp.visualization.get(id) : qApp.visualization.create(type, cols, options); // eslint-disable-line max-len
+      return qVizPromise;
+    } catch (error) {
       this.setState({ error });
-    } finally {
-      this.setState({ loading: false });
+      return undefined;
     }
   }
 
-  async componentDidMount() {
-    const qViz = await qVizPromise;
-    qViz.show(this.node);
+  async show() {
+    try {
+      const qViz = await this.qVizPromise;
+      await this.setState({ loading: false });
+      qViz.show(this.node);
+    } catch (error) {
+      this.setState({ error });
+    }
   }
 
-  async componentWillUnmount() {
-    const qViz = await qVizPromise;
-    qViz.close();
+  async close() {
+    try {
+      const qViz = await this.qVizPromise;
+      qViz.close();
+    } catch (error) {
+      this.setState({ error });
+    }
   }
 
   render() {
@@ -56,6 +81,7 @@ export default class QlikViz extends React.Component {
     } else if (this.state.loading) {
       return <div>Loading...</div>;
     }
-    return <div ref={(node) => { this.node = node; }} />
+    const { width, height } = this.props;
+    return <div ref={(node) => { this.node = node; }} style={{ width, height }} />;
   }
 }
